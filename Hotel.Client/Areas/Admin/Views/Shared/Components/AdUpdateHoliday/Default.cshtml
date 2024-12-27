@@ -1,0 +1,36 @@
+﻿<div class="modal fade" id="UpdateHoliday" tabindex="-1" role="dialog" aria-labelledby="UpdateHolidayLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<form asp-action="Update" asp-controller="AdminHolidays" area="Admin" method="POST">
+				<div class="modal-header">
+					<h3 class="modal-title fs-5" id="UpdateHolidayLabel">Cập nhật ngày lễ</h3>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="py-2">Tên ngày lễ</div>
+					<input type="text" id="UdNameHoliday" name="name" class="form-control" placeholder="Nhập tên ngày lễ" />
+					<div class="py-2">Ngày bắt đầu</div>
+					<input type="date" id="UdStartDateHoliday" name="startDate" class="form-control" />
+					<div class="py-2">Ngày kết thúc</div>
+					<input type="date" id="UdEndDateHoliday" name="endDate" class="form-control" />
+					<!-- Hidden field để chứa Id -->
+					<input type="hidden" id="UdIdHoliday" name="id" />
+
+					<div class="row w-100 mt-2">
+						<span class="mx-2" style="font-size: 15px">*Lưu ý:</span>
+					</div>
+					<div class="row w-100">
+						<p class="mx-2 my-0"> <span class="ps-2 text-danger ps-5" style="font-size: 15px">- Thời gian bắt đầu cho 1 ngày là: 00h 00'</span></p>
+						<p class="mx-2 my-0"> <span class="ps-2 text-danger ps-5" style="font-size: 15px">- Thời gian kết thúc của 1 ngày là: 24h 00'</span></p>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Hủy</button>
+					<button type="submit" class="btn btn-primary">Cập nhật</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

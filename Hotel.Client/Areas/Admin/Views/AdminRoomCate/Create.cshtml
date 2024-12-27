@@ -1,0 +1,212 @@
+﻿@model Hotel.Client.Areas.Admin.DTOs.RoomCate.RoomCateDTOs
+@{
+	ViewData["Title"] = "Thêm gói thuê";
+}
+
+
+<div class="row w-100 mt-2">
+	<div class="col-auto p-0 ps-2 "> 
+		<a asp-action="Index" class="text-decoration-none">Quản lý danh sách hạng phòng / </a>
+	</div>
+	<div class="col-auto p-0 ms-1">
+		<i>Thêm mới hạng phòng </i>
+	</div>
+</div>
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+	<div class="row fs-4 pt-2 align-items-center">
+		<div class="col-auto">
+			<span class="ps-2" style="font-size: 25px">Thêm mới hạng phòng</span>
+		</div>
+		<div class="col  d-flex justify-content-end">
+			<button type="submit" class="btn btn-success js-btn-import" name="submitAction" value="createAndGoBack">
+				<i class="fa fa-file-excel"></i> &nbsp; Tạo mới và quay về
+			</button>
+			<button type="submit" class="btn btn-success js-btn-import" style="margin-left: 10px" name="submitAction" value="createAndStay">
+				<i class="fa fa-file-excel"></i> &nbsp; Tạo mới và ở lại
+			</button>
+		</div>
+	</div>
+<hr />
+
+	<div class="row">
+		<div class="col-sm-6 pe-3">
+			<div class="row">
+				<div class="col">
+					<label class="control-label">Tên hạng phòng:</label>
+					<input asp-for="Name" class="form-control" style="border-radius: 0px; height: 32px" />
+					<span asp-validation-for="Name" class="text-danger"></span>
+				</div>
+				@* <div class="col-4">
+					<label asp-for="Status" class="control-label">Trạng thái hạng phòng:</label>
+					<select asp-for="Status" class="form-control form-select px-2 ps-0 text-center border border-secondary">
+						<option value="">---Trạng thái--</option>
+						<option value="0">Hoạt động</option>
+						<option value="1">Tạm ngưng hoạt động</option>
+					</select>
+					<span asp-validation-for="Status" class="text-danger"></span>
+				</div> *@
+			</div>
+			@* Hình ảnh  *@
+			<div class="row" style="margin-top: 15px">
+				<div class="col-12 p-0 border border-1">
+					<div class="row">
+						<div class="col">
+							<div class="form-group">
+								<div class="btn rounded-0 form-control text-start" style="background-color: #D2D2D2"><span>Hình ảnh hạng phòng (tối đa 4 - tối thiểu 1)</span></div>
+							</div>
+						</div>
+					</div>
+					<div class="row" style="margin-left: 10px;margin-bottom: 20px">
+						<div class="col-3 p-0 ms-2">
+							<div class="row w-100 position-relative">
+								<div class="col p-0 mt-2 mx-3" style="opacity: 1;">
+									<div class="row text-center justify-content-center align-items-center"
+										 style="border: dotted 2px rgb(139, 139, 139); height: 150px; position: relative;">
+										<i class="fas fa-cloud-upload-alt" style="font-size: 50px; color: rgb(10, 176, 202)"></i>
+										<img class="img-preview position-absolute"
+											 style="display: none; width: 100%; height: 100%; object-fit: cover;" />
+										<i class="fas fa-times-circle remove-image position-absolute"
+										   style="top: -15px; right: -15px; color: red; cursor: pointer; display: none; font-size: 25px"></i>
+									</div>
+								</div>
+								<div class="col-auto p-0 mt-2 mx-3 position-absolute" style="opacity: 0;">
+									<input data-preview="0" class="file-input" asp-for="FormFile1" type="file"
+										   style="height: 150px; width: 100%; " accept="image/*" />
+								</div>
+							</div>
+							<span class="fs-6 text-success position-relative" style="left: -10px;" id="labelImgPost"></span>
+						</div>
+						<div class="col-3 p-0 ms-2">
+							<div class="row w-100 position-relative">
+								<div class="col p-0 mt-2 mx-3" style="opacity: 1;">
+									<div class="row text-center justify-content-center align-items-center"
+										 style="border: dotted 2px rgb(139, 139, 139); height: 150px; position: relative;">
+										<i class="fas fa-cloud-upload-alt" style="font-size: 50px; color: rgb(10, 176, 202)"></i>
+										<img class="img-preview position-absolute"
+											 style="display: none; width: 100%; height: 100%; object-fit: cover;" />
+										<i class="fas fa-times-circle remove-image position-absolute"
+										   style="top: -15px; right: -15px; color: red; cursor: pointer; display: none; font-size: 25px"></i>
+									</div>
+								</div>
+								<div class="col-auto p-0 mt-2 mx-3 position-absolute" style="opacity: 0;">
+									<input data-preview="0" class="file-input" asp-for="FormFile2" type="file"
+										   style="height: 150px; width: 100%; " accept="image/*" />
+								</div>
+							</div>
+							<span class="fs-6 text-success position-relative" style="left: -10px;" id="labelImgPost"></span>
+						</div>
+						<div class="col-3 p-0 ms-2">
+							<div class="row w-100 position-relative">
+								<div class="col p-0 mt-2 mx-3" style="opacity: 1;">
+									<div class="row text-center justify-content-center align-items-center"
+										 style="border: dotted 2px rgb(139, 139, 139); height: 150px; position: relative;">
+										<i class="fas fa-cloud-upload-alt" style="font-size: 50px; color: rgb(10, 176, 202)"></i>
+										<img class="img-preview position-absolute"
+											 style="display: none; width: 100%; height: 100%; object-fit: cover;" />
+										<i class="fas fa-times-circle remove-image position-absolute"
+										   style="top: -15px; right: -15px; color: red; cursor: pointer; display: none; font-size: 25px"></i>
+									</div>
+								</div>
+								<div class="col-auto p-0 mt-2 mx-3 position-absolute" style="opacity: 0;">
+									<input data-preview="0" class="file-input" asp-for="FormFile3" type="file"
+										   style="height: 150px; width: 100%; " accept="image/*" />
+								</div>
+							</div>
+							<span class="fs-6 text-success position-relative" style="left: -10px;" id="labelImgPost"></span>
+						</div>
+						<div class="col-3 p-0 ms-2">
+							<div class="row w-100 position-relative">
+								<div class="col p-0 mt-2 mx-3" style="opacity: 1;">
+									<div class="row text-center justify-content-center align-items-center"
+										 style="border: dotted 2px rgb(139, 139, 139); height: 150px; position: relative;">
+										<i class="fas fa-cloud-upload-alt" style="font-size: 50px; color: rgb(10, 176, 202)"></i>
+										<img class="img-preview position-absolute"
+											 style="display: none; width: 100%; height: 100%; object-fit: cover;" />
+										<i class="fas fa-times-circle remove-image position-absolute"
+										   style="top: -15px; right: -15px; color: red; cursor: pointer; display: none; font-size: 25px"></i>
+									</div>
+								</div>
+								<div class="col-auto p-0 mt-2 mx-3 position-absolute" style="opacity: 0;">
+									<input data-preview="0" class="file-input" asp-for="FormFile4" type="file"
+										   style="height: 150px; width: 100%; " accept="image/*" />
+								</div>
+							</div>
+							<span class="fs-6 text-success position-relative" style="left: -10px;" id="labelImgPost"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group mb-1">
+				<label class="control-label">Mô tả hạng phòng:</label>
+				<textarea asp-for="Desc" class="form-control" rows="4" style="border-radius: 0px;"></textarea>
+				<span asp-validation-for="Desc" class="text-danger"></span>
+			</div>
+		</div>
+		<div class="col-sm-6" style="padding-left: 40px; padding-top: 30px">
+			<div class="form-group m-0 pb-2 mb-1" style="border-bottom: 2px solid #a55d0799;">
+				<div class="row mb-1">
+					<div class="col">
+						<div class="btn rounded-0 form-control text-start" style="background-color: #D2D2D2"><span>Số lượng tiêu chuẩn </span></div>
+					</div>
+				</div>
+				<div class="row g-3">
+					<div class="col-6">
+						<label class="control-label">Người lớn:</label>
+						<input asp-for="StanderAdult" class="form-control" min="0" style="border-radius: 0px; height: 32px" />
+						<span asp-validation-for="StanderAdult" class="text-danger"></span>
+					</div>
+					<div class="col-6">
+						<label class="control-label">Trẻ em:</label>
+						<input asp-for="StanderChildren" class="form-control" min="0" style="border-radius: 0px; height: 32px" />
+						<span asp-validation-for="StanderChildren" class="text-danger"></span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group m-0 pb-2 mb-1 mt-3" style="border-bottom: 2px solid #a55d0799 ">
+				<div class="row mb-1">
+					<div class="col">
+						<div class="btn rounded-0 form-control text-start" style="background-color: #D2D2D2"><span>Số lượng tối đa </span></div>
+					</div>
+				</div>
+				<div class="row g-3">
+					<div class="col-6">
+						<label class="control-label">Người lớn:</label>
+						<input asp-for="MaxAdult" class="form-control" min="0" style="border-radius: 0px; height: 32px" />
+						<span asp-validation-for="MaxAdult" class="text-danger"></span>
+					</div>
+					<div class="col-6">
+						<label class="control-label">Trẻ em:</label>
+						<input asp-for="MaxChildren" class="form-control" min="0" style="border-radius: 0px; height: 32px" />
+						<span asp-validation-for="MaxChildren" class="text-danger"></span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group m-0 pb-2 mb-1 mt-3" style="border-bottom: 2px solid #a55d0799 ">
+				<div class="row mb-1">
+					<div class="col">
+						<div class="btn rounded-0 form-control text-start" style="background-color: #D2D2D2"><span>Phí phát sinh/ giờ</span></div>
+					</div>
+				</div>
+				<div class="row g-3">
+					<div class="col-6">
+						<label class="control-label">Checkin sớm:</label>
+						<input asp-for="EarlyCheckInFee" class="form-control" min="0" style="border-radius: 0px; height: 32px" />
+						<span asp-validation-for="EarlyCheckInFee" class="text-danger"></span>
+					</div>
+					<div class="col-6">
+						<label class="control-label">Checkout muộn:</label>
+						<input asp-for="LateCheckOutFee" class="form-control" min="0" style="border-radius: 0px; height: 32px" />
+						<span asp-validation-for="LateCheckOutFee" class="text-danger"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row" style="margin-top: 20px">
+		<div class="form-group">
+			<partial name="_BackToList" />
+		</div>
+	</div>
+</form>

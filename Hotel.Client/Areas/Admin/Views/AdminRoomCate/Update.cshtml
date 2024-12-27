@@ -1,0 +1,126 @@
+﻿@using Hotel.Share.Enums
+@model Hotel.Client.Areas.Admin.DTOs.RoomCate.RoomCateDTOs
+@{
+	ViewData["Title"] = "Thêm gói thuê";
+}
+
+
+<div class="row w-100 mt-2">
+	<div class="col-auto p-0 ps-2 ">
+		<a asp-action="Index" class="text-decoration-none">Quản lý danh sách hạng phòng / </a>
+	</div>
+	<div class="col-auto p-0 ms-1">
+		<i>Cập nhật hạng phòng </i>
+	</div>
+</div>
+<div class="row w-100 fs-4 pt-2">
+	<span class="ps-2" style="font-size: 25px">Cập nhật hạng phòng</span>
+</div>
+<hr />
+<form asp-action="Update" method="post" enctype="multipart/form-data">
+	<div class="row">
+		<div class="col-sm-6 pe-3">
+			<div class="row">
+				<div class="col">
+					<label class="control-label">Tên hạng phòng:</label>
+					<input asp-for="Name" class="form-control" style="border-radius: 0px; height: 32px" />
+					<span asp-validation-for="Name" class="text-danger"></span>
+				</div>
+				@* <div class="col-4">
+					<label asp-for="Status" class="control-label">Trạng thái hạng phòng:</label>
+					<select asp-for="Status" class="form-control form-select px-2 ps-0 text-center border border-secondary">
+						<option value="">---Trạng thái--</option>
+						@foreach (var item in ViewBag.Status)
+						{
+							if ((RoomCateStatus)item.Id == Model.Status)
+							{
+								<option selected value="@item.Id">@item.Name</option>
+							}
+							else
+							{
+								<option value="@item.Id">@item.Name</option>
+							}
+						}
+					</select>
+					<span asp-validation-for="Status" class="text-danger"></span>
+				</div> *@
+			</div>
+			<div class="form-group mb-1">
+				<label class="control-label">Mô tả hạng phòng:</label>
+				<textarea asp-for="Desc" class="form-control" rows="12" style="border-radius: 0px;"></textarea>
+				<span asp-validation-for="Desc" class="text-danger"></span>
+			</div>
+		</div>
+		<div class="col-sm-6" style="padding-left: 40px; padding-top: 30px">
+			<div class="form-group m-0 pb-2 mb-1" style="border-bottom: 2px solid #a55d0799;">
+				<div class="row mb-1">
+					<div class="col">
+						<div class="btn rounded-0 form-control text-start" style="background-color: #D2D2D2"><span>Số lượng tiêu chuẩn </span></div>
+					</div>
+				</div>
+				<div class="row g-3">
+					<div class="col-6">
+						<label class="control-label">Người lớn:</label>
+						<input asp-for="StanderAdult" class="form-control" min="0" style="border-radius: 0px; height: 32px" />
+						<span asp-validation-for="StanderAdult" class="text-danger"></span>
+					</div>
+					<div class="col-6">
+						<label class="control-label">Trẻ em:</label>
+						<input asp-for="StanderChildren" class="form-control" min="0" style="border-radius: 0px; height: 32px" />
+						<span asp-validation-for="StanderChildren" class="text-danger"></span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group m-0 pb-2 mb-1 mt-3" style="border-bottom: 2px solid #a55d0799 ">
+				<div class="row mb-1">
+					<div class="col">
+						<div class="btn rounded-0 form-control text-start" style="background-color: #D2D2D2"><span>Số lượng tối đa </span></div>
+					</div>
+				</div>
+				<div class="row g-3">
+					<div class="col-6">
+						<label class="control-label">Người lớn:</label>
+						<input asp-for="MaxAdult" class="form-control" min="0" style="border-radius: 0px; height: 32px" />
+						<span asp-validation-for="MaxAdult" class="text-danger"></span>
+					</div>
+					<div class="col-6">
+						<label class="control-label">Trẻ em:</label>
+						<input asp-for="MaxChildren" class="form-control" min="0" style="border-radius: 0px; height: 32px" />
+						<span asp-validation-for="MaxChildren" class="text-danger"></span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group m-0 pb-2 mb-1 mt-3" style="border-bottom: 2px solid #a55d0799 ">
+				<div class="row mb-1">
+					<div class="col">
+						<div class="btn rounded-0 form-control text-start" style="background-color: #D2D2D2"><span>Phí phát sinh/ giờ</span></div>
+					</div>
+				</div>
+				<div class="row g-3">
+					<div class="col-6">
+						<label class="control-label">Checkin sớm:</label>
+						<input asp-for="EarlyCheckInFee" class="form-control" min="0" style="border-radius: 0px; height: 32px" />
+						<span class="currency-display"></span>
+						<span asp-validation-for="EarlyCheckInFee" class="text-danger"></span>
+					</div>
+					<div class="col-6">
+						<label class="control-label">Checkout muộn:</label>
+						<input asp-for="LateCheckOutFee" class="form-control " min="0" style="border-radius: 0px; height: 32px" />
+						<span class="currency-display"></span>
+						<span asp-validation-for="LateCheckOutFee" class="text-danger"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row" style="margin-top: 20px">
+		<div class="form-group">
+			<button type="submit" class="btn btn-success js-btn-import">
+				<i class="fa fa-file-excel"></i> &nbsp; Cập nhật
+			</button>
+		</div>
+		<div class="form-group">
+			<partial name="_BackToList" />
+		</div>
+	</div>
+</form>

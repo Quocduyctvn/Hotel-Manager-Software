@@ -1,0 +1,123 @@
+﻿@using Hotel.Share.Const
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using Hotel.Share.Extension
+
+@model X.PagedList.IPagedList<Hotel.Data.Entities.AppRole>
+@{
+	// var Role = ViewBag.RolePer as List<AppRolePermission>;
+	int counter = 1;
+}
+
+<div class="container-fluid p-0" style="padding-left: 10px">
+	<div class="row w-100 pt-2" style="font-weight: 500; font-size: 20px">
+		Danh sách Vai trò
+	</div>
+	<hr />
+	@if (User.IsInPermission(AuthConst.AppRole.VIEW_LIST))
+	{
+		<div class="row  " style="padding-left: 10px">
+			<div class="col p-0 ms-4 ps-3">
+				<form asp-action="Index">
+					<div class="row w-100">
+						@if (User.IsInPermission(AuthConst.AppRole.CREATE))
+						{
+							<button class="btn btn-success w-auto rounded-1">
+								<a asp-action="AddRole" asp-controller="AdminRole" class="text-decoration-none text-light">
+									<i class="fas fa-plus-circle "></i> Thêm mới vai trò
+								</a>
+							</button>
+						}
+						<div class="col-3 p-0 ms-3" style="margin-left: 10px">
+							<input type="text" name="keyword" placeholder="Tìm kiếm ngay.." class="form-control" style="border-radius: 7px 0 0 7px" />
+						</div>
+						<button type="submit" class="col-auto p-0 border border-none px-2" style="border-radius: 0 7px 7px 0">Tìm Kiếm</button>
+					</div>
+				</form>
+				<div class="row w-100 mt-4">
+					<div class="table-responsive px-0">
+						<table class="table table-bordered table-hover">
+							<thead>
+								<tr>
+									<th style="width: 35px;">#</th>
+									<th style="width: 300px;">Tên vai trò</th>
+									<th>Mô tả </th>
+									<th style="width: 195px;">Ngày tạo</th>
+									<th style="width: 110px;" class="text-center">Tùy chọn</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var item in Model)
+								{
+									<tr>
+										<td>@counter</td>
+										<td class="">@item.Name </td>
+										<td>@item.Desc</td>
+										<td>@item.CreatedDate</td>
+										<td class="justify-content-center text-center">
+											@if (User.IsInPermission(AuthConst.AppRole.UPDATE))
+											{
+												<a asp-action="Update" asp-controller="AdminRole" asp-route-id="@item.Id" class="text-primary px-2 btn btn-outline-light border border-sacondary"><i class="far fa-edit fs-5 "></i></a>
+											}
+											@if (User.IsInPermission(AuthConst.AppRole.DELETE))
+											{
+												<a asp-action="Delete" asp-controller="AdminRole" asp-route-id="@item.Id" class="text-danger px-2 btn btn-outline-light border border-secondary">
+													<i class="fas fa-trash-alt fs-5"></i>
+												</a>
+											}
+										</td>
+									</tr>
+									counter++;
+								} 
+							</tbody>
+							</table>
+							@* @if (TempData["searched"] != null && !string.IsNullOrEmpty(TempData["searched"].ToString()))
+							{
+								<div class="text-center">
+									<span class="text-danger"><i>Kết quả tìm kiếm [@Model.Count()] item </i></span> <a asp-action="Index" class="text-decoration-none text-center" style="display: inline-block">Đặt lại</a>
+								</div>
+							}
+							<div class="pagination">
+								@for (int i = 1; i <= Model.PageCount; i++)
+								{
+									<div class="page-number @(Model.PageNumber == i ? "active" : "") px-2 btn btn-primary me-1">
+										<a href="@Url.Action("Index", new { page = i })" class="text-decoration-none text-light">@i</a>
+									</div>
+								}
+							</div> *@
+							@* <div style="font-size: 12px" class="mt-2"><i>Danh sách này có tổng cộng @ViewBag.ListRole.Count bản ghi</i></div> *@
+						</div>
+					</div>
+				</div>
+		</div>
+	}
+	else
+	{
+		<div class="row justify-content-center text-red"><span>Giới hạn quyền truy cập - vui lòng liên hệ admin</span></div>
+	}
+</div>
+@* ====================================================== model  ===================================================== *@
+<div class="modal fade" id="deleteRole" tabindex="-1" aria-labelledby="deleteRole" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form asp-action="DeleteUser" method="post">
+				<input type="hidden" id="inputDelete" name="id" />
+				<div class="modal-header">
+					<h1 class="modal-title fs-5 p-2" id="updateDM_DVLabel">Bạn chắc chắn Xóa tài khoản: </h1>
+					<span id="Name" class="text-danger"></span>
+					<button type="button" class="btn-close ml-5" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+					<button type="submit" class="btn btn-primary">Xóa</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script>
+	function DeleteRole(name, id) {
+		document.getElementById('inputDelete').value = id;
+		document.getElementById('Name').textContent = `[${name}]`;
+	}
+</script>

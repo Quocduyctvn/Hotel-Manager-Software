@@ -1,0 +1,339 @@
+﻿@using Hotel.Client.Areas.Admin.DTOs.RoomCate
+@using Hotel.Share.Const
+@using Hotel.Share.Enums
+@using Hotel.Share.Extension
+@using Newtonsoft.Json
+@model X.PagedList.PagedList<Hotel.Data.Entities.AppRoomCate>
+@{
+	var stt = 1;
+	var priceJson = TempData["Price"] as string;
+	var price = priceJson != null ? JsonConvert.DeserializeObject<RoomCatePriceDTOs>(priceJson) : new RoomCatePriceDTOs();
+
+
+}
+
+
+<div class="row w-100 fs-4 ">
+	<span class="ps-2" style="font-size: 25px">Danh sách hạng phòng</span>
+</div>
+<hr />
+
+@if (User.IsInPermission(AuthConst.AppRoomCate.CREATE))
+{
+	<form asp-action="Index">
+		<div class="row align-items-center">
+			<div class="col-auto">
+				<a asp-action="Create" class="btn btn-primary">
+					<i class="fas fa-user-plus"></i> &nbsp; Thêm mới hạng phòng
+				</a>
+			</div>
+
+			<div class="col-3 p-0" style="margin-left: 6px">
+				<input type="text" name="keyword" placeholder="Tìm kiếm tên hạng phòng..." class="form-control" style="border-radius: 7px 0 0 7px" />
+			</div>
+			<div class="col-auto p-0">
+				<button type="submit" class="btn btn-primary px-2" style="border-radius: 0 7px 7px 0">Tìm Kiếm</button>
+			</div>
+
+
+			<div class="col"></div>
+			<div class="col-auto">
+				<select id="IdStatus" class="form-control form-select form-select-sm" aria-label="Small select example">
+					<option value="-1">Lọc tất cả </option>
+					@foreach (var item in ViewBag.Status)
+					{
+						<option value="@item.Id">@item.Name</option>
+					}
+				</select>
+			</div>
+		</div>
+
+	</form>
+}
+
+@if (User.IsInPermission(AuthConst.AppRoomCate.VIEW_LIST))
+{
+	<div class="table-responsive mt-3">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr>
+					<th style="width: 50px ">#</th>
+					<th>Tên hạng phòng</th>
+					<th style="width: 120px " class="text-center">SL tiêu chuẩn</th>
+					<th style="width: 100px " class="text-center">SL tối đa</th>
+					<th style="width: 180px " class="text-center">Phí phát sinh</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr onclick="window.location.href='@Url.Action("GetAmenities", new { id = item.Id })'" style="cursor: pointer;">
+						<td style="vertical-align: middle;">@stt</td>
+						<td style="vertical-align: middle;">
+							<strong>@item.Name</strong>
+							<small class="text-danger">(@item.appRooms.Count() phòng )</small>
+						</td>
+						<td style="vertical-align: middle;" class="text-center">
+							<span class="mx-1"><i class="far fa-user"></i> @item.StanderAdult</span>
+							<span class="mx-1"><i class="fa fa-baby"></i> @item.StanderChildren</span>
+						</td>
+						<td style="vertical-align: middle;" class="text-center">
+							<span class="mx-1"><i class="far fa-user"></i> @item.MaxAdult</span>
+							<span class="mx-1"><i class="fa fa-baby"></i> @item.MaxChildren</span>
+						</td>
+						<td style="vertical-align: middle;">
+							<div>
+								Nhận sớm: @string.Format("{0:#,0.#}", @item.EarlyCheckInFee) <sup>đ</sup>
+							</div>
+							<div>
+								Trả trễ:  @string.Format("{0:#,0.#}", @item.LateCheckOutFee) <sup>đ</sup>
+							</div>
+						</td>
+						<td class="justify-content-center text-center" style="width: 150px ">
+							<a asp-action="Subtr" asp-controller="AdminRoomCate" asp-route-id="@item.Id">
+								<i class="fas fa-arrow-alt-circle-up"></i>
+							</a>
+							<a asp-action="Plus" asp-controller="AdminRoomCate" asp-route-id="@item.Id">
+								<i class="fas fa-arrow-alt-circle-down"></i>
+							</a>
+
+							@if (User.IsInPermission(AuthConst.AppRoomCate.UPDATE))
+							{
+								<button type="button" class="text-light px-2 btn btn-outline-light  border border-sacondary">
+									<a asp-action="Update" asp-controller="AdminRoomCate" asp-route-id="@item.Id">
+										<i class="far fa-edit fs-5 "></i>
+									</a>
+								</button>
+							}
+
+							@if (User.IsInPermission(AuthConst.AppRoomCate.DELETE))
+							{
+								<button type="button" class=" px-2 btn btn-outline-light border border-sacondary ">
+									<a asp-action="Delete" asp-controller="AdminRoomCate" asp-route-id="@item.Id">
+										<i class="fas fa-trash-alt fs-5 text-danger"></i>
+									</a>
+								</button>
+							}
+						</td>
+					</tr>
+
+					@if (ViewBag.d_none == 1 && (int)TempData["IdAmenities"]! == @item.Id)
+					{
+						<tr id="child-table" class="">
+							<td colspan="12" style="background-color: #cbdacd">
+								<table class="table">
+									<thead>
+										<tr style="text-align: center;">
+											<th>
+												<a asp-action="CloseTable" style="color: #000400">Tiện nghi hạng phòng <i class="fas fa-angle-down"></i></a>
+											</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<form asp-action="UpdateAmenities" asp-controller="AdminRoomCate">
+												<input type="hidden" name="DeletedIdAmenities" id="DeletedIdAmenities" class="d-none" />
+												<input type="hidden" name="AddedIdAmenities" id="AddedIdAmenities" class="d-none" />
+												<input type="hidden" name="Id" value="@item.Id" class="d-none" />
+												<input type="hidden" name="IdAmenities" id="IdAmenities" class="d-none" value="@string.Join(",", item.appRoomsCateAmenity.Select(rp => rp.IdAmenity))" />
+
+
+											<td style="vertical-align: middle;">
+												<div class="d-flex flex-wrap">
+														@foreach (var amenity in ViewBag.Amenities)
+														{
+														<div class="form-group hover:text-primary" style="margin-right: 15px; margin-bottom: 15px;">
+															<div class="custom-control custom-switch form-check form-switch">
+																<input id="amenities-@amenity.Id" type="checkbox" data-id="@amenity.Id"
+																	   class="custom-control-input check-amenities form-check-input" />
+																<label for="amenities-@amenity.Id"
+																	   class="custom-control-label form-check-label w-100 hover:pointer">@amenity.Name</label>
+															</div>
+														</div>
+														}
+												</div>
+											</td>
+											<td class="justify-content-center text-center" style="width: 150px;">
+												<button type="submit" class="px-2 btn btn-primary btn-outline-light border border-secondary">
+													<i class="far fa-edit fs-5"></i> Cập nhật
+												</button>
+											</td>
+											</form>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+					}
+					@if (ViewBag.d_none == 1 && (int)TempData["IdAmenities"]! == @item.Id)
+					{
+						<tr id="child-table" class="">
+							<td colspan="12" style="background-color: #cbdacd">
+								<table class="table">
+									<form asp-action="UpdatePrice" asp-controller="AdminRoomCate" asp-route-id="@item.Id">
+									<tr style="text-align: center;">
+										<th colspan="4">Giá thuê hạng phòng</th>
+										<th></th>
+									</tr>
+									<tr>
+										<th></th>
+										<th>Thuê theo giờ</th>
+										<th>Thuê qua đêm</th>
+										<th>Thuê nguyên ngày</th>
+										<th class="justify-content-center text-center" style="width: 150px;">
+											<button type="submit" class="px-2 btn btn-primary btn-outline-light border border-secondary">
+												<i class="far fa-edit fs-5"></i> Cập nhật
+											</button>
+										</th>
+									</tr>
+									<tr>
+										<td>Đầu tuần</td>
+										<td>
+											<input asp-for="@((ViewData["Price"] as RoomCatePriceDTOs)!.A1)" value="@price.A1" class="form-control price-input" style="background-color: #cbdacd" />
+											<span class="error-message text-danger" style="display: none;">Vui lòng nhập giá trị hợp lệ.</span>
+										</td>
+										<td>
+											<input asp-for="@((ViewData["Price"] as RoomCatePriceDTOs)!.B1)" value="@price.B1" class="form-control price-input" style="background-color: #cbdacd" />
+											<span class="error-message text-danger" style="display: none;">Vui lòng nhập giá trị hợp lệ.</span>
+										</td>
+										<td>
+											<input asp-for="@((ViewData["Price"] as RoomCatePriceDTOs)!.C1)" value="@price.C1" class="form-control price-input" style="background-color: #cbdacd" />
+											<span class="error-message text-danger" style="display: none;">Vui lòng nhập giá trị hợp lệ.</span>
+										</td>
+										<th></th>
+									</tr>
+									<tr>
+										<td>Cuối tuần</td>
+										<td>
+											<input asp-for="@((ViewData["Price"] as RoomCatePriceDTOs)!.A2)" value="@price.A2" class="form-control price-input" style="background-color: #cbdacd" />
+											<span class="error-message text-danger" style="display: none;">Vui lòng nhập giá trị hợp lệ.</span>
+										</td>
+										<td>
+											<input asp-for="@((ViewData["Price"] as RoomCatePriceDTOs)!.B2)" value="@price.B2" class="form-control price-input" style="background-color: #cbdacd" />
+											<span class="error-message text-danger" style="display: none;">Vui lòng nhập giá trị hợp lệ.</span>
+										</td>
+										<td>
+											<input asp-for="@((ViewData["Price"] as RoomCatePriceDTOs)!.C2)" value="@price.C2" class="form-control price-input" style="background-color: #cbdacd" />
+											<span class="error-message text-danger" style="display: none;">Vui lòng nhập giá trị hợp lệ.</span>
+										</td>
+										<th></th>
+									</tr>
+									<tr>
+										<td>Ngày lễ</td>
+										<td>
+											<input asp-for="@((ViewData["Price"] as RoomCatePriceDTOs)!.A3)" value="@price.A3" class="form-control price-input" style="background-color: #cbdacd" />
+											<span class="error-message text-danger" style="display: none;">Vui lòng nhập giá trị hợp lệ.</span>
+										</td>
+										<td>
+											<input asp-for="@((ViewData["Price"] as RoomCatePriceDTOs)!.B3)" value="@price.B3" class="form-control price-input" style="background-color: #cbdacd" />
+											<span class="error-message text-danger" style="display: none;">Vui lòng nhập giá trị hợp lệ.</span>
+										</td>
+										<td>
+											<input asp-for="@((ViewData["Price"] as RoomCatePriceDTOs)!.C3)" value="@price.C3" class="form-control price-input" style="background-color: #cbdacd" />
+											<span class="error-message text-danger" style="display: none;">Vui lòng nhập giá trị hợp lệ.</span>
+										</td>
+										<th></th>
+									</tr>
+									</form>
+								</table>
+
+							</td>
+						</tr>
+					}
+					stt++;
+				}
+			</tbody>
+		</table>
+		@if (TempData["searched"] != null && !string.IsNullOrEmpty(TempData["searched"].ToString()))
+		{
+			<div class="text-center">
+				<span class="text-danger"><i>Kết quả tìm kiếm [@Model.Count()] item </i></span> <a asp-action="Index" class="text-decoration-none text-center" style="display: inline-block">Đặt lại</a>
+			</div>
+		}
+	</div>
+
+	<partial name="_Pager" />
+}
+else
+{
+	<div class="row justify-content-center text-red"><span>Giới hạn quyền truy cập - vui lòng liên hệ admin</span></div>
+}
+
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+
+		document.getElementById("IdStatus").addEventListener("change", function () {
+			filterData();
+		});
+
+		function filterData() {
+			var status = document.getElementById("IdStatus").value;
+
+			// Chuyển hướng đến action Index với các tham số lọc
+			window.location.href = '/Admin/AdminRoomCate/Index?status=' + status;
+		}
+	});
+</script>
+<script>
+	function toggleChildTable(id) {
+		// Chọn tất cả các bảng con
+		const allChildTables = document.querySelectorAll('[id^="child-table-"]');
+
+		// Ẩn tất cả các bảng con khác
+		allChildTables.forEach(childTable => {
+			if (childTable.id !== `child-table-${id}`) {
+				childTable.classList.add('d-none');
+			}
+		});
+
+		// Chuyển đổi trạng thái hiển thị của bảng con được chọn
+		const selectedChildTable = document.getElementById(`child-table-${id}`);
+		if (selectedChildTable) {
+			selectedChildTable.classList.toggle('d-none');
+		}
+	}
+</script>
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		const form = document.getElementById('priceForm');
+		const priceInputs = document.querySelectorAll('.price-input');
+
+		// Validate input fields on change
+		priceInputs.forEach(input => {
+			input.addEventListener('input', function () {
+				const errorSpan = this.nextElementSibling;
+
+				if (/^\d*\.?\d*$/.test(this.value) || this.value === '') {
+					errorSpan.style.display = 'none'; // Hide error if valid
+					this.style.borderColor = ''; // Reset border color if valid
+				} else {
+					errorSpan.style.display = 'inline'; // Show error if invalid
+					this.style.borderColor = 'red'; // Highlight border in red if invalid
+				}
+			});
+		});
+
+		// Prevent form submission if there are invalid inputs
+		form.addEventListener('submit', function (event) {
+			let isValid = true;
+
+			priceInputs.forEach(input => {
+				const errorSpan = input.nextElementSibling; // Get the corresponding error message
+
+				// Check for valid number
+				if (!(/^\d*\.?\d*$/.test(input.value) || input.value === '')) {
+					errorSpan.style.display = 'inline'; // Show error
+					input.style.borderColor = 'red'; // Highlight border in red
+					isValid = false; // Mark form as invalid
+				}
+			});
+
+			// If the form is not valid, prevent submission
+			if (!isValid) {
+				event.preventDefault(); // Stop form submission
+			}
+		});
+	});
+</script>

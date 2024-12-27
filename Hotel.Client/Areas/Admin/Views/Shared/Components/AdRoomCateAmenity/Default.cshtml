@@ -1,0 +1,16 @@
+﻿@model IEnumerable<Hotel.Data.Entities.AppAmenity>
+
+
+<div class="d-flex flex-wrap">
+    @foreach (var item in Model)
+    {
+        <div class="form-group hover:text-primary" style="margin-right: 15px; margin-bottom: 15px;">
+            <div class="custom-control custom-switch form-check form-switch">
+                <input id="amenities-@item.Id" type="checkbox" data-id="@item.Id"
+                       class="custom-control-input check-amenities form-check-input" />
+                <label for="amenities-@item.Id"
+                       class="custom-control-label form-check-label w-100 hover:pointer">@item.Name</label>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,158 @@
+﻿@model Hotel.Client.DTOs.PaymentDTOs
+@{
+	ViewData["Title"] = "Xác thực tài khoản";
+}
+
+<div class="auth-page-wrapper auth-bg-cover py-5 d-flex justify-content-center align-items-center min-vh-100">
+	<div class="bg-overlay"></div>
+	<!-- auth-page content -->
+	<div class="auth-page-content overflow-hidden pt-lg-5" style="z-index: 0">
+		<div class="container" style="z-index: 0">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="card overflow-hidden m-0">
+						<div class="row justify-content-center g-0">
+							<div class="col-lg-6">
+								<div class="p-lg-5 p-4 auth-one-bg h-100">
+									<div class="bg-overlay"></div>
+									<div class="position-relative h-100 d-flex flex-column">
+										<div class="mb-4" style="font-size: 20px; color:honeydew">
+											HMSoft.com
+										</div>
+										<div class="mt-auto">
+											<div class="mb-3">
+												<i class="ri-double-quotes-l display-4 text-success"></i>
+											</div>
+
+											<div id="qoutescarouselIndicators" class="carousel slide" data-bs-ride="carousel">
+												<div class="carousel-indicators">
+													<button type="button" data-bs-target="#qoutescarouselIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+													<button type="button" data-bs-target="#qoutescarouselIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+													<button type="button" data-bs-target="#qoutescarouselIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+												</div>
+												<div class="carousel-inner text-center text-white pb-5">
+													<div class="carousel-item active">
+														<p class="fs-15 fst-italic">"Tương lai của ngành khách sạn nằm trong lòng bàn tay bạn "</p>
+													</div>
+													<div class="carousel-item">
+														<p class="fs-15 fst-italic">"Chỉ cần một giải pháp thông minh, bạn đã sở hữu chìa khóa thành công của khách sạn"</p>
+													</div>
+													<div class="carousel-item">
+														<p class="fs-15 fst-italic">"Vận hành khách sạn thông minh – nâng tầm trải nghiệm khách hàng "</p>
+													</div>
+												</div>
+											</div>
+											<!-- end carousel -->
+
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-lg-6">
+								<div class="p-lg-5 p-4">
+									<div class="row">
+										<h5 class="text-primary text-center">Đăng ký Phần Mềm Quản trị Khách Sạn</h5>
+										<p class="text-muted text-center">Phần Mềm Quản trị Khách Sạn - Giải pháp quản lý khách sạn toàn diện</p>
+									</div>
+
+									<div class="mt-4">
+										<div class="row mt-2">
+											<div class="col-12 p-0 mx-auto">
+
+												<div class="row mb-2">
+													<div class="col p-0">
+														<span class="mx-auto p-0 h4" style=" border-bottom: 1px solid rgb(0, 66, 188);color: #bf8c0d;">Thông tin đăng ký</span>
+													</div>
+												</div>
+												<div class="row w-100 mb-2">
+													<div class="col p-0">
+														<span style="font-weight: 600">Tên gói thuê:</span> @Model.PackageName
+													</div>
+												</div>
+												<div class="row w-100  mb-2">
+													<div class="col p-0">
+														<span style="font-weight: 600">Tổng thanh toán:</span>@string.Format("{0:#,0.#}", @Model.TotalPrice) <sup>đ</sup>
+													</div>
+												</div>
+												<div class="row w-100  mb-2">
+													<div class="col p-0">
+														<span style="font-weight: 600">Thời gian bắt đầu:</span> @Model.StartDate
+													</div>
+												</div>
+												<div class="row w-100  mb-2">
+													<div class="col p-0">
+														<span style="font-weight: 600">Thời gian kết thúc:</span> @Model.EndDate
+													</div>
+												</div>
+
+
+												<div class="row mb-2 mt-3">
+													<div class="col p-0">
+														<span class="mx-auto p-0 h4 " style=" border-bottom: 1px solid rgb(0, 66, 188); color: #bf8c0d;">Thông tin đăng nhập quản trị</span>
+													</div>
+
+												</div>
+
+
+
+												<div class="row w-100 mb-2">
+													<div class="col p-0">
+														<span style="font-weight: 600">Mã khách sạn:</span> @Model.HtelCode
+													</div>
+												</div>
+												<div class="row w-100  mb-2">
+													<div class="col p-0">
+														<span style="font-weight: 600">Gmail đăng nhập:</span> @Model.Gmail
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="row  ">
+											<div class="col d-flex justify-content-end p-0" style="margin-top:20px; margin-right: 10px">
+												<a asp-action="CompleteRegis" style="margin: 15px 25px 0 0 ">
+													<button type="submit" class="btn btn-success px-3" style="margin-right: 20px">Hoàn tất đăng ký<i class=" fas fa-chevron-right" style="margin-left: 3px"></i></button>
+												</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- end card -->
+				</div>
+				<!-- end col -->
+
+			</div>
+			<!-- end row -->
+		</div>
+		<!-- end container -->
+	</div>
+	<!-- end Footer -->
+</div>
+<script src="~/assets/js/layout.js"></script>
+<!-- Bootstrap Css -->
+<link href="~/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<!-- Icons Css -->
+<link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+<!-- App Css-->
+<link href="~/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+<!-- custom Css-->
+<link href="~/assets/css/custom.min.css" rel="stylesheet" type="text/css" />
+
+
+
+<script src="~/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/assets/libs/simplebar/simplebar.min.js"></script>
+<script src="~/assets/libs/node-waves/waves.min.js"></script>
+<script src="~/assets/libs/feather-icons/feather.min.js"></script>
+<script src="~/assets/js/pages/plugins/lord-icon-2.1.0.js"></script>
+<script src="~/assets/js/plugins.js"></script>
+
+<!-- validation init -->
+<script src="~/assets/js/pages/form-validation.init.js"></script>
+<!-- password create init -->
+<script src="~/assets/js/pages/passowrd-create.init.js"></script>
+

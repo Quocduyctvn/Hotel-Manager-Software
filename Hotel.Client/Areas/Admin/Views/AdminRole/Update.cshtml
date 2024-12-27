@@ -1,0 +1,61 @@
+﻿@using Hotel.Share.Const
+@using Hotel.Share.Extension
+@model Hotel.Client.Areas.Admin.DTOs.Role.UpdateRoleDTOs
+
+@if (User.IsInPermission(AuthConst.AppRole.UPDATE))
+{
+	<form asp-action="Update" asp-action="AdminRole" asp-area="Admin" method="Post">
+		<div class="row w-100 px-4">
+			<div class="col-md-12">
+				<div class="row w-100 mt-2">
+					<div class="col-auto p-0 ps-2 ">
+						<a asp-action="Index" asp-controller="AdminRole" class="text-decoration-none">Quản lý danh sách vai trò /</a>
+					</div>
+					<div class="col-auto p-0 ms-1">
+						<i>Cập nhật vai trò</i>
+					</div>
+				</div>
+				<div class="row w-100 fs-4 pt-2" style="font-weight: 500">
+					<span class="ps-2">Cập nhật vai trò</span>
+				</div>
+				<hr />
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+				<input asp-for="IdPermission" class="d-none" />
+				<input asp-for="DeletedIdPermission" class="d-none" data-val="true" />
+				<input asp-for="AddedIdPermission" class="d-none" />
+				<div class="row">
+					<div class="col-md-4">
+						<div class="form-group">
+							<label asp-for="Name" class="control-label  fw-bold mb-1">Tên vai trò <span class="text-danger">*</span></label>
+							<input asp-for="Name" class="form-control" />
+							<span asp-validation-for="Name" class="text-danger"></span>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label asp-for="Desc" class="control-label fw-bold mb-1">Mô tả <span class="text-danger">*</span></label>
+							<input asp-for="Desc" class="form-control" />
+							<span asp-validation-for="Desc" class="text-danger"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-12 my-3">
+				<h5>Các hành động được phép</h5>
+			</div>
+			@await Component.InvokeAsync("Permission")
+		</div>
+		<div class="row w-100 px-4 mt-3">
+			<div class="col">
+				<div class="form-group">
+					<button type="submit" class="btn btn-success px-4"><i class="fa fa-save"></i> Lưu</button>
+					<button type="reset" class="btn btn-secondary">
+						<a asp-action="Index" asp-controller="AdminRole" class="text-decoration-none text-light">
+							<i class="fa fa-undo"></i> Quay lại
+						</a>
+					</button>
+				</div>
+			</div>
+		</div>
+	</form>
+}

@@ -1,0 +1,212 @@
+﻿@using Hotel.Share.Const
+@using Hotel.Share.Extension
+@model Hotel.Client.Areas.Admin.DTOs.Hotel.HotelDTOs
+
+
+	<div class="container-fluid p-0">
+		<form asp-action="Update" method="post" enctype="multipart/form-data">
+			<div class="row w-100 ps-4 ">
+				<div class="col-auto p-0 ps-2">
+					<a asp-action="Index" asp-controller="AdminAccount" class="text-decoration-none">Quản lý hệ thống /</a>
+				</div>
+				<div class="col-auto p-0 ms-1">
+					<i>Quản lý website </i>
+				</div>
+			</div>
+			<div class="row fs-4 pt-2 align-items-center">
+				<div class="col">
+					<div class="row w-100 fs-4 ">
+						<span class="ps-2" style="font-size: 25px">Quản lý website</span>
+					</div>
+				</div>
+				<div class="col d-flex justify-content-end">
+					<button id="submitButton" type="submit" class="btn btn-success js-btn-import"
+					style="margin-left: 10px" name="submitAction" value="createAndStay" disabled>
+						<i class="far fa-edit"></i> Cập nhật
+					</button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col p-0 ms-4 ps-4">
+					<div class="row " style="padding: 15px">
+						<div class="col-5 p-0 ">
+							<div class="row ms-0 me-4 ">
+								<div class="p-0 fw-bold fs-6 mb-2">Tên khách sạn<span class="text-danger">*</span></div>
+								<input id="hotelName" type="text" asp-for="Name" class="form-control" />
+								<span asp-validation-for="Name"></span>
+							</div>
+							<div class="row ms-0 me-4 mt-2">
+								<div class="p-0 fw-bold fs-6 mb-2">Email khách sạn<span class="text-danger">*</span></div>
+								<input type="text" asp-for="Email" class="form-control" />
+								<span asp-validation-for="Email"></span>
+							</div>
+							<div class="row ms-0 me-4  mt-2">
+								<div class="p-0 fw-bold fs-6 mb-2">Số điện thoại<span class="text-danger">*</span></div>
+								<input type="text" asp-for="Phone" class="form-control" />
+								<span asp-validation-for="Phone"></span>
+							</div>
+
+							<div class="row ms-0 mt-3">
+								<div class="col-6 p-0 ms-2">
+									<div class="p-0 fw-bold fs-6 mb-1">Ảnh đại diện</div>
+									<div class="row w-100 position-relative">
+										<div class="col p-0 mt-2 mx-3" style="opacity: 1;">
+											<div class="row text-center justify-content-center align-items-center"
+											style="border: dotted 2px rgb(139, 139, 139); height: 150px; position: relative;">
+												<i class="fas fa-cloud-upload-alt" style="font-size: 50px; color: rgb(10, 176, 202)"></i>
+												<img src="@Model.Avatar" class="img-preview position-absolute"
+												style="display: none; width: 100%; height: 100%; object-fit: cover;" />
+												<i class="fas fa-times-circle remove-image position-absolute"
+												style="top: -15px; right: -15px; color: red; cursor: pointer; display: none; font-size: 25px"></i>
+											</div>
+										</div>
+										<div class="col-auto p-0 mt-2 mx-3 position-absolute" style="opacity: 0;">
+											<input data-preview="0" class="file-input" asp-for="FileAvatar" type="file"
+											style="height: 150px; width: 100%; " accept="image/*" />
+										</div>
+									</div>
+									<span class="fs-6 text-success position-relative" style="left: -10px;" id="labelImgPost"></span>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-7 p-0 ms-auto">
+							<div class="row ms-0 me-4" style="padding-left: 40px">
+								<div class="p-0 fw-bold fs-6 mb-2">Tỉnh/ Thành phố</div>
+								<select id="provinces" asp-for="City" class="form-control rounded-1 w-100 border border-2 border-none px-4">
+									<option value="0"> -- Chọn thành phố -- </option>
+								</select>
+							</div>
+							<div class="row ms-0 me-4 mt-2" style="padding-left: 40px">
+								<div class="p-0 fw-bold fs-6 mb-2">Quận/ Huyện</div>
+								<select id="districts" asp-for="District" class="form-control rounded-1 w-100 border border-2 border-none px-4">
+									<option value="0"> -- Chọn quận/huyện -- </option>
+								</select>
+							</div>
+							<div class="row ms-0 me-4 mt-2" style="padding-left: 40px">
+								<div class="p-0 fw-bold fs-6 mb-2">Xã/ Phường</div>
+								<select id="wards" asp-for="Location" class="form-control rounded-1 w-100 border border-2 border-none px-4">
+									<option value="0"> -- Chọn xã/phường -- </option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		const nameInput = document.getElementById("hotelName");
+		const submitButton = document.getElementById("submitButton");
+
+		// Hàm kiểm tra và cập nhật trạng thái của nút
+		function toggleSubmitButton() {
+			const nameValue = nameInput.value.trim();
+			submitButton.disabled = nameValue === ""; // Disable nếu Name rỗng
+		}
+
+		// Lắng nghe sự kiện khi người dùng gõ vào trường Name
+		nameInput.addEventListener("input", toggleSubmitButton);
+
+		// Kiểm tra trạng thái nút khi trang được tải
+		toggleSubmitButton();
+	});
+</script>
+
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		// Lấy giá trị từ Model
+		const cityFromModel = "@Model.City" || "";       // Giá trị từ Model cho Tỉnh/Thành phố
+		const districtFromModel = "@Model.District" || ""; // Giá trị từ Model cho Quận/Huyện
+		const wardFromModel = "@Model.Location" || "";     // Giá trị từ Model cho Xã/Phường
+
+		// Load danh sách Tỉnh/Thành phố
+		fetch("https://api.mysupership.vn/v1/partner/areas/province")
+			.then(response => response.json())
+			.then(data => {
+				var provinces = document.getElementById("provinces");
+				provinces.innerHTML = "<option value='0'> -- Chọn thành phố -- </option>";
+
+				data.results.forEach(province => {
+					var option = document.createElement("option");
+					option.value = province.code;  // Sử dụng `code` làm value
+					option.text = province.name;
+
+					// Nếu giá trị từ Model khớp, set selected
+					if (province.code === cityFromModel) {
+						option.selected = true;
+					}
+					provinces.appendChild(option);
+				});
+
+				// Kích hoạt sự kiện change để load Quận/Huyện nếu có giá trị từ Model
+				if (cityFromModel) {
+					provinces.dispatchEvent(new Event("change"));
+				}
+			})
+			.catch(error => {
+				console.error('Error loading provinces:', error);
+			});
+
+		// Khi chọn Tỉnh/Thành phố, load Quận/Huyện
+		document.getElementById("provinces").addEventListener("change", event => {
+			var selectedProvinceCode = event.target.value;
+
+			fetch(`https://api.mysupership.vn/v1/partner/areas/district?province=${selectedProvinceCode}`)
+				.then(res => res.json())
+				.then(data => {
+					var districts = document.getElementById("districts");
+					districts.innerHTML = "<option value='0'> -- Chọn quận/huyện -- </option>";
+
+					data.results.forEach(district => {
+						var option = document.createElement("option");
+						option.value = district.code;  // Sử dụng `code` làm value
+						option.text = district.name;
+
+						// Nếu giá trị từ Model khớp, set selected
+						if (district.code === districtFromModel) {
+							option.selected = true;
+						}
+						districts.appendChild(option);
+					});
+
+					// Kích hoạt sự kiện change để load Xã/Phường nếu có giá trị từ Model
+					if (districtFromModel) {
+						districts.dispatchEvent(new Event("change"));
+					}
+				})
+				.catch(error => {
+					console.error('Error loading districts:', error);
+				});
+		});
+
+		// Khi chọn Quận/Huyện, load Xã/Phường
+		document.getElementById("districts").addEventListener("change", event => {
+			var selectedDistrictCode = event.target.value;
+
+			fetch(`https://api.mysupership.vn/v1/partner/areas/commune?district=${selectedDistrictCode}`)
+				.then(res => res.json())
+				.then(data => {
+					var wards = document.getElementById("wards");
+					wards.innerHTML = "<option value='0'> -- Chọn xã/phường -- </option>";
+
+					data.results.forEach(ward => {
+						var option = document.createElement("option");
+						option.value = ward.code;  // Sử dụng `code` làm value
+						option.text = ward.name;
+
+						// Nếu giá trị từ Model khớp, set selected
+						if (ward.code === wardFromModel) {
+							option.selected = true;
+						}
+						wards.appendChild(option);
+					});
+				})
+				.catch(error => {
+					console.error('Error loading wards:', error);
+				});
+		});
+	});
+</script>

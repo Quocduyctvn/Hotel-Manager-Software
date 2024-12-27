@@ -1,0 +1,167 @@
+﻿@using Hotel.Share.Enums
+@{
+	int AVAILABLE = 0;  // trống
+	int OCCUPIED = 0;  // Đang sử dụng
+	int CHECKING_IN = 0;   // Chờ sử dụng
+	int CHECKING_OUT = 0;  // sắp trả
+	int OVERDUE = 0;  // Quá giờ trả
+}
+
+<div class="row w-100 fs-2 px-3  mt-2" style="color:#c57103; font-size: 25px; font-weight: bold">Tổng quan</div>
+@* <canvas id="myChart" style="width:100%;max-width:600px; margin: auto"></canvas> *@
+<div class="row w-100 px-3 mt-3 d-flex justify-content-center ">
+	<div class="col-xl-3 col-md-6 p-0">
+		<a asp-action="Index" asp-controller="AdminBookingRoom" asp-area="Admin" asp-route-status="@RoomStatus.AVAILABLE" class="text-decoration-none">
+			<div class="card bg-primary text-white mb-4" >
+				<div class="row w-100 mt-3  text-light" style="height: 70px">
+					<div class="col-7 p-0">
+						<div class="row fs-3">
+							@foreach (var item in ViewBag.Room)
+							{
+								if (item.Status == RoomStatus.AVAILABLE)
+								{
+									AVAILABLE += 1;
+								}
+							}
+							<span class="fw-bold" style="padding-left: 25px">@AVAILABLE</span>
+						</div>
+						<div class="row ps-2" style="padding-left: 25px; font-size: 22px; margin-top: 6px">Phòng trống</div>
+					</div>
+					<div class="col-2 p-0 ms-auto mt-2" style="margin-left: auto">
+						<i class="fas fa-align-right fs-1"></i>
+					</div>
+				</div>
+				<div class="row " style="padding:0 8px">
+					<div class="col mt-3 justify-content-center  text-light py-2" style="background-color:#2260e7">
+						<div class="p-0 mx-auto">Xêm thêm <i class="fas fa-arrow-circle-right"></i></div>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+
+	<div class="col-xl-3 col-md-6">
+		<a asp-action="Index" asp-controller="AdminBookingRoom" asp-area="Admin" asp-route-status="@RoomStatus.OCCUPIED" class="text-decoration-none">
+			<div class="card bg-warning text-white mb-4">
+				<div class="row w-100 ms-4 mt-3  text-light" style="height: 70px">
+					<div class="col-7 p-0">
+						<div class="row fs-3">
+							@foreach (var item in ViewBag.Room)
+							{
+								if (item.Status == RoomStatus.OCCUPIED)
+								{
+									OCCUPIED += 1;
+								}
+							}
+							<span class="fw-bold" style="padding-left: 25px">@OCCUPIED</span>
+						</div>
+						<div class="row" style="padding-left: 25px; font-size: 22px; margin-top: 6px">Đang sử dụng</div>
+					</div>
+					<div class="col-2 p-0 ms-auto mt-2" style="margin-left: auto">
+						<i class="fas fa-align-right fs-1"></i>
+					</div>
+				</div>
+				<div class="row " style="padding:0 8px">
+					<div class="col ms-0 mt-3 justify-content-center  text-light py-2" style="background-color:#dca921">
+						<div class="col-auto p-0 mx-auto">Xêm thêm <i class="fas fa-arrow-circle-right"></i></div>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+	<div class="col-xl-3 col-md-6">
+		<a asp-action="Index" asp-controller="AdminBookingRoom" asp-area="Admin" asp-route-status="@RoomStatus.CHECKING_IN" class="text-decoration-none">
+			<div class="card bg-success text-white mb-4">
+				<div class="row w-100 ms-4 mt-3  text-light" style="height: 70px">
+					<div class="col-7 p-0">
+						<div class="row fs-3">
+							@foreach (var item in ViewBag.Room)
+							{
+								if (item.Status == RoomStatus.CHECKING_IN)
+								{
+									CHECKING_IN += 1;
+								}
+							}
+							<span class="fw-bold" style="padding-left: 25px">@CHECKING_IN</span>
+						</div>
+						<div class="row" style="padding-left: 25px; font-size: 22px; margin-top: 6px">Chờ nhận</div>
+					</div>
+					<div class="col-2 p-0 ms-auto mt-2" style="margin-left: auto">
+						<i class="fas fa-align-right fs-1"></i>
+					</div>
+				</div>
+				<div class="row " style="padding:0 8px">
+					<div class="col ms-0 mt-3 justify-content-center  text-light py-2" style="background-color:#005809">
+						<div class="col-auto p-0 mx-auto">Xêm thêm <i class="fas fa-arrow-circle-right"></i></div>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+	<div class="col-xl-3 col-md-6">
+		<a asp-action="Index" asp-controller="AdminBookingRoom" asp-area="Admin" asp-route-status="@RoomStatus.CHECKING_OUT" class="text-decoration-none">
+			<div class="card bg-danger text-white mb-4">
+				<div class="row w-100 ms-4 mt-3  text-light" style="height: 70px">
+					<div class="col-7 p-0">
+						<div class="row fs-3">
+							@foreach (var item in ViewBag.Room)
+							{
+								if (item.Status == RoomStatus.CHECKING_OUT)
+								{
+									CHECKING_OUT += 1;
+								}
+							}
+							<span class="fw-bold" style="padding-left: 25px">@CHECKING_OUT</span>
+						</div>
+						<div class="row" style="padding-left: 25px; font-size: 22px; margin-top: 6px">Phòng sắp trả</div>
+					</div>
+					<div class="col-2 p-0 ms-auto mt-2" style="margin-left: auto">
+						<i class="fas fa-align-right fs-1"></i>
+					</div>
+				</div>
+				<div class="row " style="padding:0 8px">
+					<div class="col ms-0 mt-3 justify-content-center  text-light py-2" style="background-color:#ac2c26">
+						<div class="col-auto p-0 mx-auto">Xêm thêm <i class="fas fa-arrow-circle-right"></i></div>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+
+	<div class="col-xl-3 col-md-6">
+		<a asp-action="Index" asp-controller="AdminBookingRoom" asp-area="Admin" asp-route-status="@RoomStatus.OVERDUE" class="text-decoration-none">
+			<div class="card text-white mb-4" style="background-color: #ebcba8">
+				<div class="row w-100 ms-4 mt-3  text-light" style="height: 70px">
+					<div class="col-7 p-0">
+						<div class="row fs-3">
+							@foreach (var item in ViewBag.Room)
+							{
+								if (item.Status == RoomStatus.OVERDUE)
+								{
+									OVERDUE += 1;
+								}
+							}
+							<span class="fw-bold" style="padding-left: 25px">@OVERDUE</span>
+						</div>
+						<div class="row" style="padding-left: 25px; font-size: 22px; margin-top: 6px">Quá giờ trả</div>
+					</div>
+					<div class="col-2 p-0 ms-auto mt-2" style="margin-left: auto">
+						<i class="fas fa-align-right fs-1"></i>
+					</div>
+				</div>
+				<div class="row " style="padding:0 8px">
+					<div class="col ms-0 mt-3 justify-content-center  text-light py-2" style="background-color:#d89345">
+						<div class="col-auto p-0 mx-auto">Xêm thêm <i class="fas fa-arrow-circle-right"></i></div>
+					</div>
+				</div>
+			</div>
+		</a>
+	</div>
+</div>
+
+<div class="row w-100 px-3 text-center mt-5 justify-content-center ">
+	<span class="text-uppercase" style="font-size: 35px">Phần Mềm Quản trị Khách Sạn - Giải pháp quản lý khách sạn toàn diện</span>
+</div>
+<div class="row w-100 px-3 text-center mt-3 justify-content-center ">
+	<span class="" style="font-size: 15px">Số 132 - Đường 3/2 - Phường Hưng Lợi - Quận Ninh Kiều - Thành Phố Cần Thơ</span>
+</div>

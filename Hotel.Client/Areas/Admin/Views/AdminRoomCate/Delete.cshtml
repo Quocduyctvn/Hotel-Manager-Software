@@ -1,0 +1,120 @@
+﻿@using Hotel.Data.Entities
+@model Hotel.Data.Entities.AppRoomCate
+@{
+	var count = 1;
+	var RoomCate = TempData["RoomCate"] as List<AppRoomCate>;
+}
+
+<div class="col-md-12" style="padding-bottom: 20px">
+	<div class="row w-100 mt-2">
+		<div class="col-auto p-0 ps-2 ">
+			<a asp-action="Index" class="text-decoration-none">Quản lý danh sách  hạng phòng /</a>
+		</div>
+		<div class="col-auto p-0 ms-1">
+			<i>Xóa hạng phòng</i>
+		</div>
+	</div>
+	<div class="row w-100 fs-4 pt-2">
+		<span class="ps-2" style="font-size: 25px">Xác nhận xóa</span>
+	</div>
+	<hr />
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+	<form asp-action="ChangesRoomCate" method="post" enctype="multipart/form-data">
+		<div class="row">
+			<div class="col-6 p-0 ps-4">
+				<input  class="d-none" asp-for="Id"/>
+				<div class="row fs-5">
+					Thông tin hạng phòng
+				</div>
+				<div class="row " style="font-size: 12px">
+					<span class="p-0"><i>Ngày tạo: @(Model.CreatedDate.HasValue ? Model.CreatedDate.Value.ToString("dd/MM/yyyy") : "N/A")</i></span>
+				</div>
+				<div class="row mt-3">
+					<p class="p-0 mb-1 fw-bold">Tên  hạng phòng</p>
+					<input type="text" asp-for="Name" class="form-control" disabled />
+				</div>
+				@if (Model.appRooms.Count() > 0)
+				{
+					<div class="row mt-5 pe-5" style="margin-left: 2px">
+						<div class="p-0 fs-5 fw-bold">Có @Model.appRooms.Count phòng bị ảnh hưởng <span class="text-danger">*</span></div>
+						@foreach (var item in Model.appRooms)
+						{
+							<p class="p-0 mb-1 text-danger me-3"><span class="fw-bold">@count .</span> @item.Name</p>
+							count++;
+						}
+					</div>
+					<div class="row" style="">
+						<div class="col">
+							<label  class="control-label">Chuyển 'Phòng' sang hạng phòng khác:</label>
+						</div>
+						<div class="col">
+							<select name="idRoomCateNew" class="form-control form-select px-2 ps-0 text-center border border-secondary" id="roomCategorySelect">
+								<option value="">---Chọn hạng phòng--</option>
+								@foreach (var item in RoomCate)
+								{
+									if (Model.Id != item.Id)
+									{
+										<option value="@item.Id">@item.Name</option>
+									}
+								}
+							</select>
+							<span asp-validation-for="Id" class="text-danger"></span>
+						</div>
+					</div>
+
+				}
+				else
+				{
+					<div class="p-0 mt-4 fs-5 fw-bold">Không có phòng bị ảnh hưởng - có thể xóa<span class="text-danger">*</span></div>
+				}
+			</div>
+			<div class="col-5 ms-auto p-0" style="margin-left: auto">
+				<div class="alert alert-info mt-0">
+					<span class=" fw-bold ">Lưu ý thay đổi đối trạng thái với hạng phòng có ảnh hưởng đối với phòng </span>
+					<div>Trạng thái từ "Hoạt động" sang "Tạm ngừng". Thay đổi này có thể do:</div>
+					<ul>
+						<li>Hạng phòng đang được cập nhật.</li>
+						<li>Nhu cầu sử dụng giảm hoặc tạm ngưng hoạt động kinh doanh.</li>
+					</ul>
+					<strong> * </strong> Nếu 'hạng phòng' có 'phòng' bị ảnh hưởng - việc thay đổi trạng thái hạng phòng cũng sẽ thay đổi trạng thái phòng sang tạm ngưng
+				</div>
+			</div>
+
+		</div>
+		<div class="row" style="margin-top: 35px">
+			@if (Model.appRooms.Count() <= 0)
+			{
+				<div class="form-group">
+					<button type="button" class="btn btn-danger js-btn-import">
+						<a asp-action="DeleteRoomCate" asp-controller="AdminRoomCate" asp-route-id="@Model.Id" class="text-light">
+							<i class="fa fa-file-excel text-light"></i> &nbsp; Xác nhận xóa
+						</a>
+					</button>
+				</div>
+			}
+			else
+			{
+				<div class="form-group">
+					<button type="submit" class="btn btn-danger text-light js-btn-import" disabled>
+						<i class="fa fa-file-excel"></i> &nbsp; Xóa và chuyển hạng phòng
+					</button>
+				</div>
+			}
+			<div class="form-group">
+				<partial name="_BackToList" />
+			</div>
+		</div>
+	</form>
+</div>
+<script>
+	// Lấy các phần tử của nút và select
+	const submitButton = document.querySelector('.js-btn-import');
+	const selectElement = document.getElementById('roomCategorySelect');
+
+	// Lắng nghe sự kiện change của thẻ select
+	selectElement.addEventListener('change', function () {
+		// Kích hoạt nút nếu một hạng phòng được chọn
+		submitButton.disabled = !selectElement.value;
+	});
+</script>

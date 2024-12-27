@@ -1,0 +1,103 @@
+﻿@using Hotel.Share.Const
+@using Hotel.Share.Extension
+@model Hotel.Client.Areas.Admin.DTOs.User.UpdateUserDTOs
+
+
+@if (User.IsInPermission(AuthConst.AppUser.CREATE))
+{
+	<div class="container-fluid p-0">
+		<div class="row w-100 ps-4 ">
+			<div class="col-auto p-0 ps-2">
+				<a asp-action="Index" asp-controller="AdminAccount" class="text-decoration-none">Quản lý danh sách tài khoản /</a>
+			</div>
+			<div class="col-auto p-0 ms-1">
+				<i> Cập nhật tài khoản</i>
+			</div>
+		</div>
+		<div class="row w-100 fs-4   pt-2" style="font-weight: 500; font-size: 20px">
+			<span class="ps-2">Cập nhật tài khoản</span>
+		</div>
+		<div class="row">
+			<div class="col p-0 ms-4 ps-4">
+				<form asp-action="Update" method="post" enctype="multipart/form-data">
+					<div class="row " style="padding: 15px">
+						<div class="col-5 p-0 ">
+							<div class="row ms-0 me-4 ">
+								<div class="p-0 fw-bold fs-6 mb-2">Họ tên <span class="text-danger">*</span></div>
+								<input type="text" asp-for="Name" class="form-control" />
+								<span asp-validation-for="Name"></span>
+							</div>
+							<div class="row ms-0 me-4 mt-2">
+								<div class="p-0 fw-bold fs-6 mb-2">Mật khẩu <span class="text-danger">*</span></div>
+								<input type="password" asp-for="Password" value="***********" disabled class="form-control" />
+							</div>
+							<div class="row ms-0 me-4  mt-2">
+								<div class="p-0 fw-bold fs-6 mb-2">Xác nhận mật khẩu <span class="text-danger">*</span></div>
+								<input type="password" asp-for="Cfm_Password" value="***********" disabled class="form-control" />
+							</div>
+							<div class="row ms-0 me-4  mt-2">
+								<div class="p-0 fw-bold fs-6 mb-2">Vai trò trên trang</div>
+								<select asp-for="IdRole" id="statusSelect" class="form-select form-control form-select-sm py-2" aria-label="Small select example">
+									@foreach (var item in ViewBag.ListRole)
+									{
+										if (Model.IdRole == item.Id)
+										{
+											<option value="@item.Id" selected>@item.Name</option>
+										}
+										else
+										{
+											<option value="@item.Id">@item.Name</option>
+										}
+									}
+								</select>
+							</div>
+						</div>
+
+						<div class="col-7 p-0 ms-auto ">
+							<div class="row ms-0 me-4 " style="padding-left: 40px">
+								<div class="p-0 fw-bold fs-6 mb-2">Email </div>
+								<input type="text" asp-for="Email" class="form-control" />
+								<span asp-validation-for="Email"></span>
+							</div>
+							<div class="row ms-0 me-4  mt-2" style="padding-left: 40px">
+								<div class="p-0 fw-bold fs-6 mb-2">Số điện thoại  </div>
+								<input type="text" asp-for="Phone" class="form-control" />
+								<span asp-validation-for="Phone"></span>
+							</div>
+							<div class="row ms-0 mx-3  mt-2" style="padding-left: 15px">
+								<div class="col-6 p-0 ms-2">
+									<div class="p-0 fw-bold fs-6 mb-2">Ảnh đại diện</div>
+									<div class="row w-100 position-relative">
+										<div class="col p-0 mt-2 mx-3" style="opacity: 1;">
+											<div class="row text-center justify-content-center align-items-center"
+											style="border: dotted 2px rgb(139, 139, 139); height: 150px; position: relative;">
+												<i class="fas fa-cloud-upload-alt" style="font-size: 50px; color: rgb(10, 176, 202)"></i>
+												<img class="img-preview position-absolute"
+												style=" width: 100%; height: 100%; object-fit: cover;" src="@Model.StrAvatar" />
+												<i class="fas fa-times-circle remove-image position-absolute"
+												style="top: -15px; right: -15px; color: red; cursor: pointer; display: none; font-size: 25px"></i>
+											</div>
+										</div>
+										<div class="col-auto p-0 mt-2 mx-3 position-absolute" style="opacity: 0;">
+											<input data-preview="0" class="file-input" asp-for="fileAvatar" type="file"
+											style="height: 150px; width: 100%; " accept="image/*" />
+										</div>
+									</div>
+									<span class="fs-6 text-success position-relative" style="left: -10px;" id="labelImgPost"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row w-100  mt-5" style="padding-left: 7px">
+						<button class="btn btn-success  p-2 px-4 w-auto" type="submit"><i class="far fa-save"></i> Lưu</button>
+						<button class="btn  p-2 px-4 w-auto ms-2" style="background-color: #c3c3c3; margin-left: 20px" type="reset"><i class="fas fa-undo"></i> Nhập lại</button>
+					</div>
+				</form>
+				<div class="row mt-3 " style="padding-left: 7px">
+					<a asp-action="Index" asp-controller="AdminAccount" class="text-decoration-none p-0 w-auto">Quay về trang danh sách</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+}

@@ -1,0 +1,364 @@
+﻿@model IEnumerable<Hotel.Client.DTOs.Article.ArticleListItemDTO>
+@{
+	ViewData["Title"] = "Xem tin tức";
+}
+<main>
+	<div class="container">
+		<section class="blog-container">
+			<div class="row">
+				<div class="col-md-6">
+					@if (Model.Count() > 0)
+					{
+					<div class="blog-card large">
+						<img src="@Model.ElementAt(0)?.Images" alt="@Model.ElementAt(0)?.Title">
+						<div class="blog-content">
+							<span class="category">@Model.ElementAt(0)?.CateName</span>
+							<h5>
+									<a asp-action="Detail" asp-route-id="@Model.ElementAt(0).Id" class="text-white">
+										@Model.ElementAt(0)?.Title
+									</a>
+							</h5>
+						</div>
+					</div>
+					}
+				</div>
+				<div class="col-md-6">
+					@if (Model.Count() > 1)
+					{
+						<div class="blog-card">
+							<img src="@Model.ElementAt(1)?.Images" alt="@Model.ElementAt(1)?.Title">
+							<div class="blog-content">
+								<span class="category">@Model.ElementAt(1)?.CateName</span>
+								<h5>
+									<a asp-action="Detail" asp-route-id="@Model.ElementAt(1).Id" class="text-white">
+										@Model.ElementAt(1)?.Title
+									</a>
+								</h5>
+							</div>
+						</div>
+					}
+					@if (Model.Count() > 2)
+					{
+					<div class="blog-card">
+						<img src="@Model.ElementAt(2)?.Images" alt="@Model.ElementAt(2)?.CateName">
+						<div class="blog-content">
+							<span class="category">@Model.ElementAt(2)?.CateName</span>
+							<h5>
+								<a asp-action="Detail" asp-route-id="@Model.ElementAt(2).Id" class="text-white">
+									@Model.ElementAt(2)?.Title
+								</a>
+							</h5>
+						</div>
+					</div>
+					}
+				</div>
+
+				@for (int i = 3; i < Model.Count() && i <= 6; i++)
+				{
+					<div class="col-md-3">
+						<div class="blog-card">
+							<img src="@Model.ElementAt(i)?.Images" alt="@Model.ElementAt(i)?.Title">
+							<div class="blog-content">
+								<span class="category">@Model.ElementAt(i)?.CateName</span>
+								<h5>
+									<a asp-action="Detail" asp-route-id="@Model.ElementAt(i).Id" class="text-white">
+										@Model.ElementAt(i)?.Title
+									</a>
+								</h5>
+							</div>
+						</div>
+					</div>
+				}
+			</div>
+		</section>
+		<div class="mt-3 m-auto">
+			<img class="w-100 px-3" src="/images/img/banner_2.jpg" alt="Blog banner 2">
+		</div>
+		<!-- Phần giữa -->
+		<section class="container">
+			<div class="d-flex">
+				<h1>Kinh doanh khách sạn</h1>
+				<div class="mt-3 mx-5">
+					<nav class="menu">
+						<a href="#">Marketing khách sạn</a>
+						<a href="#">Nghiệp vụ khách sạn</a>
+						<a href="#">Quản lý khách sạn</a>
+					</nav>
+				</div>
+			</div>
+			<section class="content">
+				<div class="main-article">
+					<img src="/images/img/blog_img1.jpg" alt="Article Image">
+					<h2>Định giá dựa trên đối thủ cạnh tranh: Hướng dẫn cho khách sạn</h2>
+				</div>
+				<div class="main-article">
+					<img src="/images/img/blog_img2.jpg" alt="Article Image">
+					<h2>TOP 15+ phần mềm quản lý nhà nghỉ tăng doanh thu hiệu quả</h2>
+				</div>
+				<div class="main-article">
+					<img src="/images/img/blog_img3.jpg" alt="Article Image">
+					<h2>Tâm lý khách du lịch 5+ quốc gia đặc trưng, chi tiết nhất</h2>
+				</div>
+			</section>
+			<div class="row">
+				<aside class="sidebar">
+					<div class="d-flex justify-content-center">
+						<div class="col-md-4">
+							<div class="side-article">
+								<img src="/images/img/blog_img6.jpg" alt="Thumbnail Image">
+								<div>
+									<p>Báo cáo xu hướng du lịch nghỉ dưỡng năm 2025</p>
+									<span>20/10/2024</span>
+								</div>
+							</div>
+							<div class="side-article">
+								<img src="/images/img/blog_img6.jpg" alt="Thumbnail Image">
+								<div>
+									<p>Báo cáo xu hướng du lịch nghỉ dưỡng năm 2025</p>
+									<span>20/10/2024</span>
+								</div>
+							</div>
+							<div class="side-article">
+								<img src="/images/img/blog_img6.jpg" alt="Thumbnail Image">
+								<div>
+									<p>Báo cáo xu hướng du lịch nghỉ dưỡng năm 2025</p>
+									<span>20/10/2024</span>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="side-article">
+								<img src="/images/img/blog_img6.jpg" alt="Thumbnail Image">
+								<div>
+									<p>Du lịch MICE: 'Con gà đẻ trứng vàng' của ngành du lịch Việt Nam</p>
+									<span>15/10/2024</span>
+								</div>
+							</div>
+							<div class="side-article">
+								<img src="/images/img/blog_img6.jpg" alt="Thumbnail Image">
+								<div>
+									<p>Du lịch MICE: 'Con gà đẻ trứng vàng' của ngành du lịch Việt Nam</p>
+									<span>15/10/2024</span>
+								</div>
+							</div>
+							<div class="side-article">
+								<img src="/images/img/blog_img6.jpg" alt="Thumbnail Image">
+								<div>
+									<p>Du lịch MICE: 'Con gà đẻ trứng vàng' của ngành du lịch Việt Nam</p>
+									<span>15/10/2024</span>
+								</div>
+							</div>
+						</div>
+						<!-- Thêm các bài viết khác trong sidebar tương tự -->
+						<div class="col-md-4">
+							<div class="side-article">
+								<img src="/images/img/blog_img6.jpg" alt="Thumbnail Image">
+								<div>
+									<p>Du lịch MICE: 'Con gà đẻ trứng vàng' của ngành du lịch Việt Nam</p>
+									<span>15/10/2024</span>
+								</div>
+							</div>
+							<div class="side-article">
+								<img src="/images/img/blog_img6.jpg" alt="Thumbnail Image">
+								<div>
+									<p>Du lịch MICE: 'Con gà đẻ trứng vàng' của ngành du lịch Việt Nam</p>
+									<span>15/10/2024</span>
+								</div>
+							</div>
+							<div class="side-article">
+								<img src="/images/img/blog_img6.jpg" alt="Thumbnail Image">
+								<div>
+									<p>Du lịch MICE: 'Con gà đẻ trứng vàng' của ngành du lịch Việt Nam</p>
+									<span>15/10/2024</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</aside>
+			</div>
+		</section>
+		<h1>Chuyên mục</h1>
+		<div class="d-flex">
+			<section class="category-section">
+				<div class="d-flex">
+					<div class="card" style="width: 12rem; height: 250px;">
+						<img src="/images/img/b1.jpg" class="card-img-top" alt="Image Card">
+						<div class="card-body">
+							<p class="card-text">
+								Báo cáo chi tiết mức độ sẵn sàng trở lại du lịch của du khách Việt
+							</p>
+						</div>
+					</div>
+					<div class="card" style="width: 12rem; height: 250px;">
+						<img src="/images/img/b2.jpg" class="card-img-top" alt="Image Card">
+						<div class="card-body">
+							<p class="card-text">
+								Bí quyết tăng trưởng “THẦN TỐC” DOANH THU KHÁCH SẠN trong thời đại
+								4.0.
+							</p>
+						</div>
+					</div>
+					<div class="card" style="width: 12rem; height: 250px;">
+						<img src="/images/img/b3.jpg" class="card-img-top" alt="Image Card">
+						<div class="card-body">
+							<p class="card-text">Tài liệu Chuyển đổi số ngành Kinh doanh Khách sạn.</p>
+						</div>
+					</div>
+				</div>
+				<div class="carousel-indicators">
+					<span class="dot"></span>
+					<span class="dot"></span>
+					<span class="dot"></span>
+					<span class="dot"></span>
+					<!-- Thêm các dot khác nếu cần -->
+				</div>
+			</section>
+			<section class="register-section text-center">
+				<h3>Đăng ký tư vấn</h3>
+				<form class="register-form">
+					<input type="text" placeholder="Họ và tên" required>
+					<input type="tel" placeholder="Số điện thoại" required>
+					<input type="email" placeholder="Email" required>
+					<input type="text" placeholder="Tên khách sạn" required>
+					<input type="text" placeholder="Địa chỉ" required>
+					<div class="recaptcha">
+						<input type="checkbox" required> Tôi không phải là người máy
+					</div>
+					<button type="submit">Nhận tư vấn miễn phí</button>
+				</form>
+			</section>
+		</div>
+		<div class="category-page">
+			<header class="category-header">
+				<h1>Chuyên mục</h1>
+			</header>
+			<section class="featured-article">
+				<img src="/images/img/news.jpg" alt="Featured Image">
+				<div class="article-content">
+					<h2>Glamping là gì? Xu hướng cắm trại độc đáo nhất hiện nay</h2>
+					<div>
+						<p>
+							Mô hình Glamping là gì? Glamping và camping có giống nhau không? Tham khảo bài viết sau
+							để có
+							câu
+							trả lời
+							chính xác nhất.
+						</p>
+						<span class="date">30/11/2023</span>
+					</div>
+				</div>
+			</section>
+			<section class="articles">
+				<article class="article">
+					<img src="/images/img/blog_img3.jpg" alt="Image 1">
+					<div class="text">
+						<h3>Top 10 khách sạn ở Hà Giang siêu đẹp khiến du khách lạc lối</h3>
+						<div>
+							<p>
+								Hãy cùng ezCloud khám phá ngay top 10 khách sạn ở Hà Giang chất lượng, đa dạng thiết
+								kế
+								từ
+								phong cách
+								hiện đại đến truyền thống.
+							</p>
+							<span class="date">31/10/2024</span>
+						</div>
+					</div>
+				</article>
+				<article class="article">
+					<img src="/images/img/blog_img6.jpg" alt="Image 2">
+					<div class="text">
+						<h3>Ăn gì ở Bắc Ninh? Top 10+ món ăn đặc sản 'thử là nghiện'</h3>
+						<div>
+							<p>
+								Hãy cùng ezCloud giải đáp vấn đề ăn gì ở Bắc Ninh với những món ăn đặc sản truyền
+								thống
+								sở hữu hương vị dân dã.
+							</p>
+							<span class="date">30/10/2024</span>
+						</div>
+					</div>
+				</article>
+				<article class="article">
+					<img src="/images/img/blog_img2.jpg" alt="Image 3">
+					<div class="text">
+						<h3>Định giá dựa trên đối thủ cạnh tranh: Hướng dẫn cho khách sạn</h3>
+						<div>
+							<p>
+								Hãy cùng ezCloud giải đáp vấn đề ăn gì ở Bắc Ninh với những món ăn đặc sản truyền
+								thống
+								sở
+								hữu hương
+								vị dân dã.
+							</p>
+							<span class="date">30/10/2024</span>
+						</div>
+					</div>
+				</article>
+			</section>
+			<div class="row">
+				<div class="recommendations">
+					<div class="recommendation-item">
+						<img src="/images/img/img1.jpg" alt="Image 1">
+						<h3>Nên đi du lịch Đà Lạt tháng nào, mùa nào đẹp nhất 2024</h3>
+					</div>
+					<div class="recommendation-item">
+						<img src="/images/img/img2.jpg" alt="Image 2">
+						<h3>Top 15 địa điểm du lịch Hà Giang nổi tiếng “đẹp quên lối về”</h3>
+					</div>
+					<div class="recommendation-item">
+						<img src="/images/img/img3.jpg" alt="Image 3">
+						<h3>20 món ngon Phú Quốc mà bạn nhất định không thể bỏ qua</h3>
+					</div>
+					<div class="recommendation-item">
+						<img src="/images/img/img4.jpg" alt="Image 4">
+						<h3>Khám phá 10 đặc sản Sapa nên mua làm quà chuẩn vị núi rừng Tây Bắc 2024</h3>
+					</div>
+					<div class="recommendation-item">
+						<img src="/images/img/img1.jpg" alt="Image 1">
+						<h3>Nên đi du lịch Đà Lạt tháng nào, mùa nào đẹp nhất 2024</h3>
+					</div>
+					<div class="recommendation-item">
+						<img src="/images/img/img2.jpg" alt="Image 2">
+						<h3>Top 15 địa điểm du lịch Hà Giang nổi tiếng “đẹp quên lối về”</h3>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<section class="newsletter">
+		<h2>Đăng ký nhận tin miễn phí từ ezCloud</h2>
+		<div class="newsletter-form">
+			<div class="email-input">
+				<span class="icon">📧</span>
+				<input type="email" placeholder="Email" />
+			</div>
+			<button class="submit-btn">Đăng ký ngay</button>
+		</div>
+	</section>
+</main>
+
+
+<script src="~/assets/js/layout.js"></script>
+<!-- Bootstrap Css -->
+<link href="~/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<!-- Icons Css -->
+<link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+<!-- App Css-->
+<link href="~/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+<!-- custom Css-->
+<link href="~/assets/css/custom.min.css" rel="stylesheet" type="text/css" />
+
+<script src="~/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/assets/libs/simplebar/simplebar.min.js"></script>
+<script src="~/assets/libs/node-waves/waves.min.js"></script>
+<script src="~/assets/libs/feather-icons/feather.min.js"></script>
+<script src="~/assets/js/pages/plugins/lord-icon-2.1.0.js"></script>
+<script src="~/assets/js/plugins.js"></script>
+
+<!-- validation init -->
+<script src="~/assets/js/pages/form-validation.init.js"></script>
+<!-- password create init -->
+<script src="~/assets/js/pages/passowrd-create.init.js"></script>
+
+<link href="~/css/style.css" rel="stylesheet" />

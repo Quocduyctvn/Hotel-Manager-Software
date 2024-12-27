@@ -1,0 +1,590 @@
+﻿@using Hotel.Data.Entities
+@using Hotel.Share.Const
+@using Hotel.Share.Enums
+@using Hotel.Share.Extension
+@model IEnumerable<Hotel.Client.Areas.Admin.DTOs.BookingRoom.BookingRoomDTOs>
+
+<div class="row" style="width: 100%; font-weight: bold; font-size: 25px; margin-left: 2px">
+	<span style="border-bottom: 2px solid green">Lịch đặt phòng</span>
+</div>
+
+@if (User.IsInPermission(AuthConst.AppBookingRoom.VIEW_LIST))
+{
+	<div class="row mt-2" style="width: 100%; margin-bottom: 20px">
+		<a asp-action="" class="btn mx-1 py-1 btn-success" style="color: #343434">
+			Tất cả
+		</a>
+		<a asp-action="" asp-route-status="AVAILABLE" class="btn mx-1 py-1" style="background-color:rgb(237, 237, 237) ">Đang trống</a>
+		<a asp-action="" asp-route-status="CHECKING_IN" class="btn mx-1 py-1" style="background-color:#f80 ">Sắp nhận</a>
+		<a asp-action="" asp-route-status="OCCUPIED" class="btn mx-1 py-1" style="background-color: #279656 ">Đang sử dụng</a>
+		<a asp-action="" asp-route-status="CHECKING_OUT" class="btn mx-1 py-1" style="background-color:#00a590 ">Sắp trả</a>
+		<a asp-action="" asp-route-status="OVERDUE" class="btn mx-1 py-1" style="background-color:#ffdbd4 ">Quá giờ</a>
+	</div>
+	@foreach (var item in Model)
+	{
+		if (item.appRooms.Any())
+		{
+			<div class="row ">
+				@foreach (var room in item.appRooms)
+				{
+					@if (room.Status == RoomStatus.OCCUPIED)
+					{
+						#region Room đang sử dụng
+						<div class="col-ms-8 col-md-8 col-lg-4 col-xl-2 room" style="background-color: #279656; border-radius: 7px; height: 195px; margin: 5px;">
+							<div class="row" style="padding: 10px 10px 0px;">
+								<div class="col-9 p-0" style="padding: 3px; margin-top: 5px;">
+
+									@if (room.CleanStatus == CleanRoomStatus.Clean)
+									{
+										<span style="padding: 3px 5px; background-color:#f0f1f3; color: #48995a; border-radius: 10px;">
+											<i class="far fa-snowflake"></i>
+											<span></span>
+											Sạch
+										</span>
+									}
+									else
+									{
+										<span style="padding: 3px 5px ; background-color:#ffe6e6; color: #c00; border-radius: 10px;">
+											<i class="fas fa-broom"></i>
+											<span></span>
+											Chưa dọn
+										</span>
+									}
+								</div>
+								<div class="col-3 p-0" style="text-align: end; position: relative;">
+									<i class="fas fa-ellipsis-v ellipsis-icon me-1" style="padding: 10px; cursor: pointer;" onclick="toggleDropdown('dropdown-@room.Id', event)"></i>
+
+									<!-- Dropdown container -->
+									@if (room.CleanStatus == CleanRoomStatus.Clean)
+									{
+										<div id="dropdown-@room.Id" class="dropdown-container" style="display: none;cursor: pointer; position: absolute; top: 1px; right: 20px; z-index: 1000; background-color: #fbfeff; width: 165px;">
+											<a asp-action="UpdateStatus" asp-route-id="@room.Id" asp-route-status="@CleanRoomStatus.NotClean" class="form-control text-center">Chưa dọn</a>
+										</div>
+									}
+									else
+									{
+										<div id="dropdown-@room.Id" class="dropdown-container" style="display: none; position: absolute; top: 1px; right: 20px; z-index: 1000; background-color: #fbfeff; width: 165px;">
+											<a asp-action="UpdateStatus" asp-route-id="@room.Id" asp-route-status="@CleanRoomStatus.Clean" class="form-control text-center">Làm sạch</a>
+										</div>
+									}
+								</div>
+							</div>
+
+							<a asp-action="CheckOutPopup" asp-route-id="@room.Id" style="display: block; text-decoration: none; color: inherit;">
+								<div class="row" style="padding:0 10px;">
+									<div class="col p-0" style="padding:0 3px">
+										<span style="padding: 3px; font-size:25px; font-weight: bold;">
+											@room.Name
+										</span>
+										<span class="badge" style="color: white">
+											Đang sử dụng
+										</span>
+									</div>
+								</div>
+								<div class="row" style="padding: 0 10px;">
+									<div class="col p-0" style="padding: 3px; font-size: 14px;">
+										@room.appRoomCate.Name
+									</div>
+								</div>
+								<div class="row" style="padding: 0 10px;">
+									<div class="col p-0" style="padding: 3px; font-size: 14px;">
+										<i class="far fa-clock"></i> @string.Format("{0:#,0.#}", @item.HourlyRate)
+									</div>
+								</div>
+								<div class="row" style="padding: 0 10px;">
+									<div class="col p-0" style="padding: 3px; font-size: 14px;">
+										<i class="far fa-sun"></i> @string.Format("{0:#,0.#}", @item.OvernightRate)
+									</div>
+								</div>
+								<div class="row" style="padding: 0 10px;">
+									<div class="col p-0" style="padding: 3px; font-size: 14px;">
+										<i class="far fa-moon"></i> @string.Format("{0:#,0.#}", @item.FullDayRate)
+									</div>
+								</div>
+							</a>
+						</div>
+						#endregion
+					}
+					@if (room.Status == RoomStatus.AVAILABLE)
+					{
+						#region Room đang TRỐNG
+						<div class="col-ms-8 col-md-8 col-lg-4 col-xl-2 room" style="background-color: rgb(237, 237, 237); border-radius: 7px; height: 195px; margin: 5px;">
+							<div class="row" style="padding: 10px 10px 0px;">
+								<div class="col-9 p-0" style="padding: 3px; margin-top: 5px;">
+
+									@if (room.CleanStatus == CleanRoomStatus.Clean)
+									{
+										<span style="padding: 3px 5px; background-color:#f0f1f3; color: #48995a; border-radius: 10px;">
+											<i class="far fa-snowflake"></i>
+											<span></span>
+											Sạch
+										</span>
+									}
+									else
+									{
+										<span style="padding: 3px 5px; background-color:#ffe6e6; color: #c00; border-radius: 10px;">
+											<i class="fas fa-broom"></i>
+											<span></span>
+											Chưa dọn
+										</span>
+									}
+								</div>
+								<div class="col-3 p-0" style="text-align: end; position: relative;">
+									<i class="fas fa-ellipsis-v ellipsis-icon me-1" style="padding: 10px; cursor: pointer;" onclick="toggleDropdown('dropdown-@room.Id', event)"></i>
+
+									<!-- Dropdown container -->
+									@if (room.CleanStatus == CleanRoomStatus.Clean)
+									{
+										<div id="dropdown-@room.Id" class="dropdown-container" style="display: none;cursor: pointer; position: absolute; top: 1px; right: 20px; z-index: 1000; background-color: #fbfeff; width: 165px;">
+											<a asp-action="UpdateStatus" asp-route-id="@room.Id" asp-route-status="@CleanRoomStatus.NotClean" class="form-control text-center">Chưa dọn</a>
+										</div>
+									}
+									else
+									{
+										<div id="dropdown-@room.Id" class="dropdown-container" style="display: none; position: absolute; top: 1px; right: 20px; z-index: 1000; background-color: #fbfeff; width: 165px;">
+											<a asp-action="UpdateStatus" asp-route-id="@room.Id" asp-route-status="@CleanRoomStatus.Clean" class="form-control text-center">Làm sạch</a>
+										</div>
+									}
+								</div>
+							</div>
+
+							<a asp-action="BookingRoom" asp-route-id="@room.Id" style="display: block; text-decoration: none; color: inherit;">
+								<div class="row" style="padding:0 10px;">
+									<div class="col p-0" style="padding:0 3px">
+										<span style="padding: 3px; font-size:25px; font-weight: bold;">
+											@room.Name
+										</span>
+									</div>
+								</div>
+								<div class="row" style="padding: 0 10px;">
+									<div class="col p-0" style="padding: 3px; font-size: 14px;">
+										@room.appRoomCate.Name
+									</div>
+								</div>
+								<div class="row" style="padding: 0 10px;">
+									<div class="col p-0" style="padding: 3px; font-size: 14px;">
+										<i class="far fa-clock"></i> @string.Format("{0:#,0.#}", @item.HourlyRate)
+									</div>
+								</div>
+								<div class="row" style="padding: 0 10px;">
+									<div class="col p-0" style="padding: 3px; font-size: 14px;">
+										<i class="far fa-sun"></i> @string.Format("{0:#,0.#}", @item.OvernightRate)
+									</div>
+								</div>
+								<div class="row" style="padding: 0 10px;">
+									<div class="col p-0" style="padding: 3px; font-size: 14px;">
+										<i class="far fa-moon"></i> @string.Format("{0:#,0.#}", @item.FullDayRate)
+									</div>
+								</div>
+							</a>
+						</div>
+						#endregion
+					}
+					@if (room.Status == RoomStatus.CHECKING_IN)
+					{
+						#region Room Cb nhận
+						<div class="col-ms-8 col-md-8 col-lg-4 col-xl-2 room" style="background-color:#f80; border-radius: 7px; height: 195px; margin: 5px;">
+							<div class="row" style="padding: 10px 10px 0px;">
+								<div class="col-9 p-0" style="padding: 3px; margin-top: 5px;">
+
+									@if (room.CleanStatus == CleanRoomStatus.Clean)
+									{
+										<span style="padding:3px 5px; background-color:#f0f1f3; color: #48995a; border-radius: 10px;">
+											<i class="far fa-snowflake"></i>
+											<span></span>
+											Sạch
+										</span>
+									}
+									else
+									{
+										<span style="padding: 3px 5px; background-color:#ffe6e6; color: #c00; border-radius: 10px;">
+											<i class="fas fa-broom"></i>
+											<span></span>
+											Chưa dọn
+										</span>
+									}
+								</div>
+								<div class="col-3 p-0" style="text-align: end; position: relative;">
+									<i class="fas fa-ellipsis-v ellipsis-icon me-1" style="padding: 10px; cursor: pointer;" onclick="toggleDropdown('dropdown-@room.Id', event)"></i>
+
+									<!-- Dropdown container -->
+									@if (room.CleanStatus == CleanRoomStatus.Clean)
+									{
+										<div id="dropdown-@room.Id" class="dropdown-container" style="display: none;cursor: pointer; position: absolute; top: 1px; right: 20px; z-index: 1000; background-color: #fbfeff; width: 165px;">
+											<a asp-action="UpdateStatus" asp-route-id="@room.Id" asp-route-status="@CleanRoomStatus.NotClean" class="form-control text-center">Chưa dọn</a>
+										</div>
+									}
+									else
+									{
+										<div id="dropdown-@room.Id" class="dropdown-container" style="display: none; position: absolute; top: 1px; right: 20px; z-index: 1000; background-color: #fbfeff; width: 165px;">
+											<a asp-action="UpdateStatus" asp-route-id="@room.Id" asp-route-status="@CleanRoomStatus.Clean" class="form-control text-center">Làm sạch</a>
+										</div>
+									}
+								</div>
+							</div>
+
+							<a asp-action="Index" asp-route-IdRoom="@room.Id" style="display: block; text-decoration: none; color: inherit;">
+								<div class="row" style="padding:0 10px;">
+									<div class="col p-0" style="padding:0 3px">
+										<span style="padding: 3px; font-size:25px; font-weight: bold;">
+											@room.Name
+										</span>
+										<span class="badge" style="background-color: #f80; color: white">
+											Đang chờ nhận
+										</span>
+									</div>
+								</div>
+								<div class="row" style="padding: 0 10px;">
+									<div class="col p-0" style="padding: 3px; font-size: 14px;">
+										@room.appRoomCate.Name
+									</div>
+								</div>
+								<div class="row" style="padding: 0 10px;">
+									<div class="col p-0" style="padding: 3px; font-size: 14px;">
+										<i class="far fa-clock"></i> @string.Format("{0:#,0.#}", @item.HourlyRate)
+									</div>
+								</div>
+								<div class="row" style="padding: 0 10px;">
+									<div class="col p-0" style="padding: 3px; font-size: 14px;">
+										<i class="far fa-sun"></i> @string.Format("{0:#,0.#}", @item.OvernightRate)
+									</div>
+								</div>
+								<div class="row" style="padding: 0 10px;">
+									<div class="col p-0" style="padding: 3px; font-size: 14px;">
+										<i class="far fa-moon"></i> @string.Format("{0:#,0.#}", @item.FullDayRate)
+									</div>
+								</div>
+							</a>
+						</div>
+						#endregion
+					}
+					@if (room.Status == RoomStatus.CHECKING_OUT)
+					{
+						#region Room Sắp trả
+						<div class="col-ms-8 col-md-8 col-lg-4 col-xl-2 room" style="background-color: #00a590; border-radius: 7px; height: 195px; margin: 5px;">
+							<div class="row" style="padding: 10px 10px 0px;">
+								<div class="col-9 p-0" style="padding: 3px; margin-top: 5px;">
+
+									@if (room.CleanStatus == CleanRoomStatus.Clean)
+									{
+										<span style="padding: 3px 5px; background-color:#f0f1f3; color: #48995a; border-radius: 10px;">
+											<i class="far fa-snowflake"></i>
+											<span></span>
+											Sạch
+										</span>
+									}
+									else
+									{
+										<span style="padding: 3px 5px; background-color:#ffe6e6; color: #c00; border-radius: 10px;">
+											<i class="fas fa-broom"></i>
+											<span></span>
+											Chưa dọn
+										</span>
+									}
+								</div>
+								<div class="col-3 p-0" style="text-align: end; position: relative;">
+									<i class="fas fa-ellipsis-v ellipsis-icon me-1" style="padding: 10px; cursor: pointer;" onclick="toggleDropdown('dropdown-@room.Id', event)"></i>
+
+									<!-- Dropdown container -->
+									@if (room.CleanStatus == CleanRoomStatus.Clean)
+									{
+										<div id="dropdown-@room.Id" class="dropdown-container" style="display: none;cursor: pointer; position: absolute; top: 1px; right: 20px; z-index: 1000; background-color: #fbfeff; width: 165px;">
+											<a asp-action="UpdateStatus" asp-route-id="@room.Id" asp-route-status="@CleanRoomStatus.NotClean" class="form-control text-center">Chưa dọn</a>
+										</div>
+									}
+									else
+									{
+										<div id="dropdown-@room.Id" class="dropdown-container" style="display: none; position: absolute; top: 1px; right: 20px; z-index: 1000; background-color: #fbfeff; width: 165px;">
+											<a asp-action="UpdateStatus" asp-route-id="@room.Id" asp-route-status="@CleanRoomStatus.Clean" class="form-control text-center">Làm sạch</a>
+										</div>
+									}
+								</div>
+							</div>
+
+							<a asp-action="CheckOutPopup" asp-route-id="@room.Id" style="display: block; text-decoration: none; color: inherit;">
+								<div class="row" style="padding:0 10px;">
+									<div class="col p-0" style="padding:0 3px">
+										<span style="padding: 3px; font-size:25px; font-weight: bold;">
+											@room.Name
+										</span>
+										<span class="badge" style="background-color: #f80">
+											Sắp trả
+										</span>
+									</div>
+								</div>
+								<div class="row" style="padding: 0 10px;">
+									<div class="col p-0" style="padding: 3px; font-size: 14px;">
+										@room.appRoomCate.Name
+									</div>
+								</div>
+								<div class="row" style="padding: 0 10px;">
+									<div class="col p-0" style="padding: 3px; font-size: 14px;">
+										<i class="far fa-clock"></i> @string.Format("{0:#,0.#}", @item.HourlyRate)
+									</div>
+								</div>
+								<div class="row" style="padding: 0 10px;">
+									<div class="col p-0" style="padding: 3px; font-size: 14px;">
+										<i class="far fa-sun"></i> @string.Format("{0:#,0.#}", @item.OvernightRate)
+									</div>
+								</div>
+								<div class="row" style="padding: 0 10px;">
+									<div class="col p-0" style="padding: 3px; font-size: 14px;">
+										<i class="far fa-moon"></i> @string.Format("{0:#,0.#}", @item.FullDayRate)
+									</div>
+								</div>
+							</a>
+						</div>
+						#endregion
+					}
+					@if (room.Status == RoomStatus.OVERDUE)
+					{
+						#region Room Quá giờ trả
+						<div class="col-ms-8 col-md-8 col-lg-4 col-xl-2 room mt-2" style="background-color: #ffdbd4; border-radius: 7px; height: 195px; margin: 5px;">
+							<div class="row" style="padding: 10px 10px 0px;">
+								<div class="col-9 p-0" style="padding: 3px; margin-top: 5px;">
+
+									@if (room.CleanStatus == CleanRoomStatus.Clean)
+									{
+										<span style="padding: 3px 5px; background-color:#f0f1f3; color: #48995a; border-radius: 10px;">
+											<i class="far fa-snowflake"></i>
+											<span></span>
+											Sạch
+										</span>
+									}
+									else
+									{
+										<span style="padding: 3px 5px; background-color:#ffe6e6; color: #c00; border-radius: 10px;">
+											<i class="fas fa-broom"></i>
+											<span></span>
+											Chưa dọn
+										</span>
+									}
+								</div>
+								<div class="col-3 p-0" style="text-align: end; position: relative;">
+									<i class="fas fa-ellipsis-v ellipsis-icon me-1" style="padding: 10px; cursor: pointer;" onclick="toggleDropdown('dropdown-@room.Id', event)"></i>
+
+									<!-- Dropdown container -->
+									@if (room.CleanStatus == CleanRoomStatus.Clean)
+									{
+										<div id="dropdown-@room.Id" class="dropdown-container" style="display: none;cursor: pointer; position: absolute; top: 1px; right: 20px; z-index: 1000; background-color: #fbfeff; width: 165px;">
+											<a asp-action="UpdateStatus" asp-route-id="@room.Id" asp-route-status="@CleanRoomStatus.NotClean" class="form-control text-center">Chưa dọn</a>
+										</div>
+									}
+									else
+									{
+										<div id="dropdown-@room.Id" class="dropdown-container" style="display: none; position: absolute; top: 1px; right: 20px; z-index: 1000; background-color: #fbfeff; width: 165px;">
+											<a asp-action="UpdateStatus" asp-route-id="@room.Id" asp-route-status="@CleanRoomStatus.Clean" class="form-control text-center">Làm sạch</a>
+										</div>
+									}
+								</div>
+							</div>
+
+							<a asp-action="CheckOutPopup" asp-route-id="@room.Id" style="display: block; text-decoration: none; color: inherit;">
+								<div class="row" style="padding:0 10px;">
+									<div class="col p-0" style="padding:0 3px">
+										<span style="padding: 3px; font-size:25px; font-weight: bold;">
+											@room.Name
+										</span>
+										<span class="badge" style="color: white; background-color:#ffb9b9">
+											Quá giờ
+										</span>
+									</div>
+								</div>
+								<div class="row" style="padding: 0 10px;">
+									<div class="col p-0" style="padding: 3px; font-size: 14px;">
+										@room.appRoomCate.Name
+									</div>
+								</div>
+								<div class="row" style="padding: 0 10px;">
+									<div class="col p-0" style="padding: 3px; font-size: 14px;">
+										<i class="far fa-clock"></i> @string.Format("{0:#,0.#}", @item.HourlyRate)
+									</div>
+								</div>
+								<div class="row" style="padding: 0 10px;">
+									<div class="col p-0" style="padding: 3px; font-size: 14px;">
+										<i class="far fa-sun"></i> @string.Format("{0:#,0.#}", @item.OvernightRate)
+									</div>
+								</div>
+								<div class="row" style="padding: 0 10px;">
+									<div class="col p-0" style="padding: 3px; font-size: 14px;">
+										<i class="far fa-moon"></i> @string.Format("{0:#,0.#}", @item.FullDayRate)
+									</div>
+								</div>
+							</a>
+						</div>
+						#endregion
+					}
+				}
+			</div>
+		}
+	}
+}
+else
+{
+	<div class="row justify-content-center text-red"><span>Giới hạn quyền truy cập - vui lòng liên hệ admin</span></div>
+}
+
+@if (Model.All(m => !m.appRooms.Any()))
+{
+	<div class="row  justify-content-center" style="width: 100%;">
+		<span>
+			Hiện tại không có phòng nào phù hợp với tiêu chí tìm kiếm.<a asp-action=""> - Thiết lặp lại</a>
+		</span>
+	</div>
+}
+
+<script>
+	function toggleDropdown(dropdownId, event) {
+		event.stopPropagation(); // Ngăn chặn sự kiện click bên ngoài ảnh hưởng
+		const dropdown = document.getElementById(dropdownId);
+		if (dropdown.style.display === "none" || !dropdown.style.display) {
+			dropdown.style.display = "block";
+		} else {
+			dropdown.style.display = "none";
+		}
+	}
+
+	// Đóng dropdown khi nhấp ra ngoài
+	document.addEventListener("click", function (e) {
+		document.querySelectorAll(".dropdown-container").forEach(container => {
+			container.style.display = "none";
+		});
+	});
+
+	function ChangeStatus(roomId, newStatus) {
+		alert("  successfully");
+		const data = {
+			roomId: roomId,
+			status: newStatus
+		};
+
+		// Gửi yêu cầu AJAX
+		fetch('/Admin/AdminBookingRoom/UpdateStatus', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(data)
+		})
+			.then(response => response.json())
+			.then(result => {
+				if (result.success) {
+					alert("Status updated successfully");
+					location.reload(); // Tải lại trang để cập nhật UI
+				} else {
+					alert("Failed to update status");
+				}
+			})
+			.catch(error => {
+				console.error("Error updating status:", error);
+				alert("An error occurred while updating status");
+			});
+	}
+</script>
+<script>
+
+	function toggleMenu() {
+		const menu = document.getElementById('optionsMenu');
+		menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+	}
+	window.onclick = function (event) {
+		const menu = document.getElementById('optionsMenu');
+		if (!event.target.matches('.fa-ellipsis-v')) {
+			menu.style.display = 'none';
+		}
+	}
+</script>
+<style>
+	.room-container {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Tự động chia cột */
+		gap: 10px; /* Khoảng cách giữa các phần tử */
+	}
+
+	.room {
+		height: 195px;
+		border-radius: 7px;
+		background-color: #f0f0f0;
+	}
+
+	body {
+		background-color: rgb(235, 235, 235);
+	}
+
+	.room {
+		background-color: rgb(237, 237, 237);
+		border-radius: 7px;
+		height: 180px;
+		margin: 5px;
+		transition: box-shadow 0.3s ease, transform 0.3s ease;
+	}
+
+		.room:hover {
+			box-shadow: 0px 4px 15px rgba(116, 116, 116, 0.5);
+			transform: translateY(-5px);
+		}
+
+	.ellipsis-icon {
+		padding: 3px;
+		text-align: end;
+		cursor: pointer;
+	}
+
+		.ellipsis-icon:hover {
+			background-color: #d4d4d4;
+			border-radius: 30px;
+		}
+
+	.options-menu {
+		display: none;
+		position: absolute;
+		background-color: white;
+		box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+		border-radius: 5px;
+		padding: 5px;
+		z-index: 1;
+	}
+
+		.options-menu div {
+			padding: 8px 12px;
+			cursor: pointer;
+		}
+
+			.options-menu div:hover {
+				background-color: #f0f0f0;
+			}
+</style>
+@if (TempData["Popup"] != null)
+{
+	@await Html.PartialAsync("_Popup", TempData["Popup"] as AppBookingRoom)
+}
+
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		var modalElement = document.getElementById('PopupBookingRoom');
+		if (modalElement) {
+			var myModal = new bootstrap.Modal(modalElement);
+			myModal.show();
+		}
+	});
+</script>
+@if (ViewData["CheckOutPopup"] != null)
+{
+	@await Html.PartialAsync("_CheckOutPopup", ViewData["CheckOutPopup"] as AppBookingRoom)
+}
+
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		// Razor logic để kiểm tra dữ liệu
+	@if (ViewData["CheckOutPopup"] != null)
+	{
+		<text>
+							var modalElement = document.getElementById('CheckOutPopup');
+			if (modalElement) {
+				var myModal = new bootstrap.Modal(modalElement);
+				myModal.show();
+			}
+		</text>
+	}
+			});
+</script>

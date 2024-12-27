@@ -1,0 +1,58 @@
+﻿@model Hotel.Data.Entities.AppArticle
+@{
+	ViewData["Title"] = Model.Title;
+}
+
+<style>
+	.article-img {
+		max-width: 75%;
+		max-height: 500px;
+		object-fit: cover;
+		text-align: center;
+		margin: 20px auto;
+		display: block;
+	}
+</style>
+
+<main>
+	
+	<div class="container py-4">
+		<div class="row">
+			<div class="col-md-8">
+				<div class="card">
+					<div class="card-header">
+						<h3>@Model.Title</h3>
+					</div>
+					<div class="card-body">
+						<p class="small">
+							<i class="fa fa-calendar"></i> @Model.CreatedDate?.ToString("dd/MM/yyyy HH:mm")
+						</p>
+						<img src="@Model.Images" class="article-img" />
+
+						<p class="font-italic">@Model.Summary</p>
+
+						@Html.Raw(Model.Content)
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="card">
+					<div class="card-header">
+						<h3>Bài viết cùng chuyên mục</h3>
+					</div>
+					<div class="card-body">
+						<ul class="style-list-none" style="padding: 0">
+							@foreach (var article in ViewBag.RelatedArticles)
+							{
+								<li class="d-flex mt-2">
+									<img src="@article.Images" style="width: 70px; height: 70px; object-fit: cover;" class="rounded mr-1" />
+									<a href="@Url.Action("Detail", "Article", new { id = article.Id })">@article.Title</a>
+								</li>
+							}
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>

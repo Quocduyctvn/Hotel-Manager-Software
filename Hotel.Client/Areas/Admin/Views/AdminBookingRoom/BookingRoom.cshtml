@@ -1,0 +1,428 @@
+﻿@using Hotel.Client.Areas.Admin.DTOs.CusHotel
+@using Hotel.Data.Entities
+@using Newtonsoft.Json
+
+@model Hotel.Client.Areas.Admin.DTOs.BookingRoom.AddBookingRoomDTOs
+@{
+	// Giải tuần tự hóa dữ liệu từ TempData
+	var rooms = TempData["Room"] as List<AppRoom>;
+	var rentalTypes = TempData["RentalType"] as List<AppRentalType>;
+	var rentalPrice = TempData["Price"] as List<AppRentalPrice>;
+	
+}
+
+
+<div>
+	<a asp-action="" style="color: #2a3e32; font-weight:bold; font-size: 16px">Lễ tân</a>
+	<i class="fas fa-angle-right"></i><span style="font-size: 14px"> Đặt/Nhận phòng nhanh</span>
+</div>
+<button type="button" class="my-3 px-2 btn btn-light btn-outline-success border border-success"
+		data-toggle="modal" data-target="#UpdateCustomer">
+	<i class="fas fa-info-circle"></i> Thông tin khách hàng
+</button>
+
+<table class="table table-bordered table-hover" style="border-collapse: collapse;">
+	<thead>
+		<tr>
+			<th class="p-0" style="width: 250px">Phòng </th>
+			<th class="p-0" style="width:55px ">T.đa</th>
+			<th class="p-0" style="width: 75px ">T.chuẩn</th>
+			<th class="p-0" style="width: 115px ">Hình thức</th>
+			<th class="p-0" style="width: 130px ">Giờ nhận</th>
+			<th class="p-0" style="width: 130px ">Giờ trả</th>
+			<th class="p-0" style="width: 90px ">Dự kiến</th>
+			<th class="p-0 text-end" style="width: 100px;"><span>Tạm tính</span></th>
+
+		</tr>
+	</thead>
+	<tr style="height: 10px;"></tr>
+	<tbody>
+		<tr style="font-size: 14px">
+			<td style="vertical-align: middle;" class="p-1">
+				@foreach (var room in rooms)
+				{
+					@if (Model.IdRoom == room.Id)
+					{
+						<span style="font-weight: bold">@room.Name</span>
+					}
+				} <span style="color: red; font-size: 12px">/ (@Model.RoomCateName)</span>
+			</td>
+			<td style="vertical-align: middle;" class="p-1">
+				<i class="far fa-user"></i><span style="padding: 0 2px">@Model.MaxAdult |</span>
+				<i class="fa fa-baby"></i><span style="padding: 0 2px">@Model.MaxChildren</span>
+			</td>
+			<td style="vertical-align: middle;" class="p-1">
+				<i class="far fa-user"></i><span style="padding: 0 2px">@Model.StanderAdult |</span>
+				<i class="fa fa-baby"></i><span style="padding: 0 2px">@Model.StanderChildren</span>
+			</td>
+
+			<td style="vertical-align: middle;" class=" p-1">
+				<select id="IdRentalType" data-room-id="@Model.IdRoom" class="form-select form-control " aria-label="Default select example" style="font-size: 14px; padding:0 3px; border: none">
+					@foreach (var rentalType in rentalTypes)
+					{
+						@if (rentalType.Id == 1)
+						{
+							@if (Model.IdRentalType == rentalType.Id)
+							{
+								<option value="@rentalType.Id" selected>Giờ</option>
+							}
+							else
+							{
+								<option value="@rentalType.Id">Giờ</option>
+							}
+						}
+						@if (rentalType.Id == 2)
+						{
+							@if (Model.IdRentalType == rentalType.Id)
+							{
+								<option value="@rentalType.Id" selected>Qua đêm</option>
+							}
+							else
+							{
+								<option value="@rentalType.Id">Qua đêm</option>
+							}
+						}
+						@if (rentalType.Id == 3)
+						{
+							@if (Model.IdRentalType == rentalType.Id)
+							{
+								<option value="@rentalType.Id" selected>Nguyên ngày</option>
+							}
+							else
+							{
+								<option value="@rentalType.Id">Nguyên ngày</option>
+							}
+						}
+					}
+				</select>
+			</td>
+			<td style="vertical-align: middle;" class="p-1">
+				<!-- Giờ nhận -->
+				<input type="datetime-local" id="checkInTime" value="@(Model.CheckInExpectual.HasValue ? Model.CheckInExpectual.Value.ToString("yyyy-MM-ddTHH:mm") : "")"
+					   data-room-id="@Model.IdRoom" class="form-control" style="font-size: 14px; padding: 0 3px" />
+			</td>
+			<td style="vertical-align: middle;" class="p-1">
+				<input type="datetime-local" id="checkOutTime" value="@(Model.CheckOutExpectual.HasValue ? Model.CheckOutExpectual.Value.ToString("yyyy-MM-ddTHH:mm") : "")"
+					   data-room-id="@Model.IdRoom" class="form-control" disabled style="font-size: 14px; padding: 0 3px" />
+			</td>
+			<td style="vertical-align: middle;" class="p-1">
+				<span id="estimatedTime">
+				</span>
+			</td>
+
+
+			<td style="vertical-align: middle; display: flex; justify-content: end;" class="p-1">
+				<span class="mx-1" id="roomPrice">
+					@string.Format("{0:#,0.#}", @Model.RoomPrice)
+				</span>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="9" class=" p-1">
+				<div class="counter-container" style="display: flex; justify-content: end; gap: 40px;">
+					<div>
+						<span>Người lớn</span>
+						<div class="counter">
+							<button type="button" class="btn-minus" onclick="decrement('adultCount', 'AdultCount')">−</button>
+							<input type="text" id="adultCount" max="@Model.MaxAdult" data-room-id="@Model.IdRoom" onchange="updateBookingField(this, 'AdultCount')" class="count-input" value="@Model.Adult" />
+							<button type="button" class="btn-plus" onclick="increment('adultCount', 'AdultCount')">+</button>
+						</div>
+					</div>
+					<div>
+						<span>Trẻ em</span>
+						<div class="counter">
+							<button type="button" class="btn-minus" onclick="decrement('childrenCount', 'ChildrenCount')">−</button>
+							<input type="text" id="childrenCount" max="@Model.MaxChildren" data-room-id="@Model.IdRoom" onchange="updateBookingField(this, 'ChildrenCount')" class="count-input" value="@Model.Children" />
+							<button type="button" class="btn-plus" onclick="increment('childrenCount', 'ChildrenCount')">+</button>
+						</div>
+					</div>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="9" class="p-1" id="warningMessage" style="color: red; display: none;">
+				<div style="display: flex; justify-content: end; gap: 60px;">
+					<div style="width: 450px; display: flex; align-items: end;" class="text-end">
+						<span>Giờ nhận không được sau giờ trả.</span>
+					</div>
+				</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<div style="display: flex; justify-content: end; gap: 60px;">
+	<div style=" display: flex; align-items: flex-end;">
+		<button type="button" class="text-black mt-3 px-3 btn btn-success border border-sacondary"
+				id="bookRoomBtnn">
+			Đặt phòng
+		</button>
+	</div>
+</div>
+
+
+@await Html.PartialAsync("_CustomerInfo", Model)
+
+@await Html.PartialAsync("_ConfirmBookingRoom")
+<style>
+	table, th, td, tr {
+		border: none !important;
+	}
+
+	.counter-container {
+		display: flex;
+		align-items: center;
+		gap: 20px;
+	}
+
+	.counter {
+		display: inline-flex;
+		align-items: center;
+		gap: 5px;
+	}
+
+	.count-input {
+		width: 30px;
+		text-align: center;
+		border: none;
+		border-bottom: 1px solid #ddd;
+	}
+
+	.btn-minus, .btn-plus {
+		border: none;
+		background-color: transparent;
+		font-size: 18px;
+		cursor: pointer;
+		color: #555;
+	}
+
+		.btn-minus:disabled, .btn-plus:disabled {
+			color: #ccc;
+			cursor: not-allowed;
+		}
+</style>
+
+<script>
+	function increment(id, fieldName) {
+		let input = document.getElementById(id);
+		let max = parseInt(input.getAttribute('max'), 10);
+		let value = parseInt(input.value, 10) || 0;
+
+		if (value < max) {
+			input.value = value + 1;
+			updateBookingField(input, fieldName); // Gọi hàm cập nhật sau khi tăng
+		}
+	}
+
+	// Hàm giảm số lượng
+	function decrement(id, fieldName) {
+		let input = document.getElementById(id);
+		let value = parseInt(input.value, 10) || 0;
+
+		if (value > 0) {
+			input.value = value - 1;
+			updateBookingField(input, fieldName); // Gọi hàm cập nhật sau khi giảm
+		}
+	}
+	function updateBookingField(input, fieldName) {
+		const roomId = input.getAttribute('data-room-id');
+		const value = input.value;
+		console.log("Room ID:", roomId);
+		console.log("Field:", fieldName);
+		console.log("Value:", value);
+		// Tạo đối tượng dữ liệu để gửi đi
+		const data = {
+			roomId: roomId,
+			field: fieldName,
+			value: value.toString() // Chuyển sang chuỗi nếu cần
+		};
+
+		fetch('/AdminBookingRoom/UpdateQuantity', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(data)
+		})
+			.then(response => {
+				// Kiểm tra nếu phản hồi không phải JSON
+				if (!response.ok) {
+					return response.text().then(text => {
+						throw new Error("Lỗi server: " + text);
+					});
+				}
+				return response.json();
+			})
+			.then(result => {
+				if (result.success) {
+					window.location.reload();
+				} else {
+					console.log("Cập nhật thất bại:", result.error);
+				}
+			})
+			.catch(error => {
+				console.error("Lỗi khi gửi yêu cầu:", error);
+			});
+
+	}
+</script>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		initializeForm();
+	});
+
+	function initializeForm() {
+		calculateEstimatedTime();
+		updateRentalType();
+	}
+
+	function updateRentalType() {
+		const rentalType = document.getElementById("IdRentalType").value;
+		const checkOutTime = document.getElementById('checkOutTime');
+		checkOutTime.disabled = rentalType !== "0";
+	}
+
+	// Hàm tính toán thời gian dự kiến
+	async function calculateEstimatedTime() {
+		const checkInTime = document.getElementById('checkInTime').value;
+		const checkOutTime = document.getElementById('checkOutTime').value;
+		if (!checkInTime || !checkOutTime) return;
+
+		const checkInDate = new Date(checkInTime);
+		const checkOutDate = new Date(checkOutTime);
+
+		if (checkInDate > checkOutDate) {
+			const defaultCheckInTime = new Date().toISOString().slice(0, 16);
+			document.getElementById('checkInTime').value = defaultCheckInTime;
+		}
+		let diff = checkOutDate - checkInDate;
+		const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+		diff -= days * (1000 * 60 * 60 * 24);
+		const hours = Math.floor(diff / (1000 * 60 * 60));
+		diff -= hours * (1000 * 60 * 60);
+		const minutes = Math.floor(diff / (1000 * 60));
+
+		let estimatedTimeString = '';
+		if (days > 0) estimatedTimeString += `${days} ngày `;
+		if (hours > 0) estimatedTimeString += `${hours} giờ `;
+		if (minutes > 0) estimatedTimeString += `${minutes} phút`;
+
+		document.getElementById('estimatedTime').textContent = estimatedTimeString;
+
+		// const roomId = document.getElementById("IdRentalType").getAttribute("data-room-id");
+		// const url = `/AdminBookingRoom/UpdateCheckOutDate`;
+
+		// const data = {
+		// 	roomId: roomId,
+		// 	checkInTime: checkOutDate
+		// };
+
+		// try {
+		// 	const response = await fetch(url, {
+		// 		method: "POST",
+		// 		headers: {
+		// 			"Content-Type": "application/json"
+		// 		},
+		// 		body: JSON.stringify(data)
+		// 	});
+		// 	if (response.ok) {
+		// 		const result = await response.json();
+		// 		if (result.Price !== undefined) {
+		// 			document.getElementById('roomPrice').textContent = result.Price;
+		// 			window.location.reload();
+		// 		}
+		// 	}
+		// 	if (!response.ok) throw new Error("Error updating check-out date");
+		// } catch (error) {
+		// 	console.error("Error updating check-out date:", error);
+		// }
+	}
+
+	async function onRentalTypeChange(event) {
+		const rentalType = event.target.value;
+		const currentDate = new Date();
+		const checkInTime = document.getElementById('checkInTime');
+		const checkOutTime = document.getElementById('checkOutTime');
+
+		checkInTime.value = currentDate.toISOString().slice(0, 16);
+		checkInTime.min = checkInTime.value;
+
+		let hoursToAdd = rentalType === "1" ? 1 : rentalType === "2" ? 12 : 22;
+		checkOutTime.value = addHoursToDate(currentDate, hoursToAdd);
+		checkOutTime.min = checkOutTime.value;
+		checkOutTime.disabled = rentalType === "2";
+
+		const roomId = document.getElementById("IdRentalType").getAttribute("data-room-id");
+		const url = `/AdminBookingRoom/UpdateRentalType`;
+		const data = {
+			rentalTypeId: rentalType,
+			roomId: roomId
+		};
+
+		calculateEstimatedTime();
+		try {
+			const response = await fetch(url, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify(data)
+			});
+			if (response.ok) {
+				window.location.reload();
+			}
+		} catch (error) {
+			console.error("Error updating rental type:", error);
+		}
+
+	}
+
+	async function onCheckInTimeChange(event) {
+		const checkInDate = new Date(event.target.value);
+		const checkOutTime = document.getElementById('checkOutTime');
+		const rentalType = document.getElementById('IdRentalType').value;
+
+		checkOutTime.min = event.target.value;
+
+		let hoursToAdd = rentalType === "1" ? 1 : rentalType === "2" ? 12 : 22;
+		checkOutTime.value = addHoursToDate(checkInDate, hoursToAdd);
+
+		calculateEstimatedTime();
+
+		const roomId = document.getElementById("IdRentalType").getAttribute("data-room-id");
+		const url = `/AdminBookingRoom/UpdateCheckInDate`;
+
+		const data = {
+			roomId: roomId,
+			checkInTime: checkInDate
+		};
+
+		try {
+			const response = await fetch(url, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify(data)
+			});
+			if (response.ok) {
+				window.location.reload();
+			}
+		} catch (error) {
+			console.error("Error updating check-in time:", error);
+		}
+	}
+
+	// Hàm cộng giờ vào ngày
+	function addHoursToDate(date, hours) {
+		const newDate = new Date(date);
+		newDate.setHours(date.getHours() + hours);
+		return newDate.toISOString().slice(0, 16);
+	}
+
+	// Gắn sự kiện
+	document.getElementById('IdRentalType').addEventListener('change', onRentalTypeChange);
+	document.getElementById('checkInTime').addEventListener('change', onCheckInTimeChange);
+	document.getElementById('checkOutTime').addEventListener('change', calculateEstimatedTime);
+
+</script>

@@ -1,0 +1,201 @@
+﻿@model Hotel.Client.Areas.Admin.DTOs.BookingRoom.AddBookingRoomDTOs
+
+<div class="modal fade" id="UpdateCustomer" tabindex="-1" role="dialog" aria-labelledby="UpdateCustomerLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content" style="width: 700px; padding: 5px 15px">
+			<form asp-action="UpdateCustomer" asp-controller="AdminBookingRoom" area="Admin" enctype="multipart/form-data" method="POST" id="updateCommodityForm">
+				<div class="modal-header">
+					<h4 class="modal-title fs-5" id="UpdateCustomerLabel">Thông tin khách hàng</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="row" style="font-size: 14px">
+						<div class="col-6">
+							<input type="text" asp-for="IdRoom" class="form-control d-none" />
+							<div class="py-2"><span class="text-danger">*</span>Tên khách hàng</div>
+							<input type="text" asp-for="CusName" id="c_name" class="form-control" placeholder="Trần văn A" />
+							<span asp-validation-for="CusName" class="text-danger"></span>
+
+							<div class="pt-2">Ngày sinh</div>
+							<input type="Date" asp-for="BirthDay" class="form-control" />
+							<span asp-validation-for="BirthDay" class="text-danger"></span>
+
+							<div class="pt-2">Email</div>
+							<input type="text" asp-for="Email" id="email" class="form-control" onchange="validateEmail()" />
+							<span class="text-danger" id="email-error"></span>
+
+							<div class="pt-2">Số điện thoại</div>
+							<input type="text" asp-for="Phone" id="phone" class="form-control" onchange="validatePhone()" />
+							<span class="text-danger" id="phone-error"></span>
+
+						</div>
+						<div class="col-6">
+							<div class="pt-2">Hình ảnh</div>
+							<div class="row">
+								<div class="col-6 p-0 ms-2">
+									<div class="row w-100 position-relative">
+										<div class="col p-0 mt-2 mx-3" style="opacity: 1;">
+											<div class="row text-center justify-content-center align-items-center"
+												 style="border: dotted 2px rgb(139, 139, 139); height: 107px; position: relative;">
+												<i class="fas fa-cloud-upload-alt" style="font-size:  50px; color: rgb(10, 176, 202)"></i>
+												<img class="img-preview position-absolute" src="@Model.stringFile1" id="c_file1"
+													 style=" width: 100%; height: 100%; object-fit: cover;" />
+												<i class="fas fa-times-circle remove-image position-absolute"
+												   style="top: -15px; right: -15px; color: red; cursor: pointer; display: none; font-size: 25px"></i>
+											</div>
+										</div>
+										<div class="col-auto p-0 mt-2 mx-3 position-absolute" style="opacity: 0;">
+											<input data-preview="0" class="file-input" asp-for="FormFile1" type="file"
+												   style="height: 107px; width: 100%; " accept="image/*" />
+										</div>
+									</div>
+									<span class="fs-6 text-success position-relative" style="left: -10px;" id="labelImgPost"></span>
+								</div>
+								<div class="col-6 p-0">
+									<div class="row w-100 position-relative">
+										<div class="col p-0 mt-2 mx-3" style="opacity: 1;">
+											<div class="row text-center justify-content-center align-items-center"
+												 style="border: dotted 2px rgb(139, 139, 139); height: 107px; position: relative;">
+												<i class="fas fa-cloud-upload-alt" style="font-size: 50px; color: rgb(10, 176, 202)"></i>
+												<img class="img-preview position-absolute" src="@Model.stringFile2" id="c_file2"
+													 style="width: 100%; height: 100%; object-fit: cover;" />
+												<i class="fas fa-times-circle remove-image position-absolute"
+												   style="top: -15px; right: -15px; color: red; cursor: pointer; display: none; font-size: 25px"></i>
+											</div>
+										</div>
+										<div class="col-auto p-0 mt-2 mx-3 position-absolute" style="opacity: 0;">
+											<input data-preview="0" class="file-input" asp-for="FormFile2" type="file"
+												   style="height: 107px; width: 100%; " accept="image/*" />
+										</div>
+									</div>
+									<span class="fs-6 text-success position-relative" style="left: -10px;" id="labelImgPost"></span>
+								</div>
+							</div>
+
+							<div class="row" style="margin-right: 10px">
+
+								<div class="" style="margin-top: 5px">Quốc tịch</div>
+								<select id="country" asp-for="Country" class="form-select form-control" onchange="onCountryChange()">
+									<option value="">Chọn quốc gia</option>
+								</select>
+
+								<span class="text-danger" id="country-error"></span>
+
+								<div class="pt-2">Địa chỉ</div>
+								<input type="text" asp-for="Address" class="form-control" />
+								<span asp-validation-for="Address" class="text-danger"></span>
+							</div>
+
+						</div>
+					</div>
+					<div class="row" style="margin: 0 6px 0 2px">
+						<div class="pt-2">Mô tả</div>
+						<textarea class="form-control" asp-for="CusDesc" id="c_desc" rows="4"></textarea>
+						<span asp-validation-for="CusDesc" class="text-danger"></span>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Hủy</button>
+					<button type="submit" class="btn btn-primary" id="submitBtn" disabled>Cập nhật</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script>
+	document.addEventListener("DOMContentLoaded", () => {
+		const selectedCountry = '@Model.Country'; // Giá trị từ Razor model
+		loadCountries(selectedCountry);
+	});
+
+	function loadCountries(selectedCountry) {
+		fetch('https://restcountries.com/v3.1/all')
+			.then(response => response.json())
+			.then(data => {
+				const countrySelect = document.getElementById("country");
+				data.forEach(country => {
+					let option = document.createElement("option");
+					option.value = country.name.common;
+					option.textContent = country.name.common;
+
+					// Đánh dấu selected nếu trùng với giá trị từ Model
+					if (country.name.common === selectedCountry) {
+						option.selected = true;
+					}
+
+					countrySelect.appendChild(option);
+				});
+			})
+			.catch(error => console.error('Error loading countries:', error));
+	}
+
+
+</script>
+<script>
+	const emailRegex = /^[a-zA-Z0-9._%+-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const phoneRegex = /^(\+84|0)[3|5|7|8|9]\d{8}$/;
+
+function validateEmail() {
+    const emailInput = document.getElementById("email");
+    const emailError = document.getElementById("email-error");
+    const emailValue = emailInput.value.trim();
+
+    if (!emailValue) {
+        emailError.textContent = ""; // Không có lỗi nếu email trống
+        document.getElementById('submitBtn').disabled = false;
+        return;
+    }
+
+
+    if (!emailRegex.test(emailValue)) {
+        emailError.textContent = "Vui lòng nhập đúng định dạng email (vd: hotel@gmail.com)";
+        document.getElementById('submitBtn').disabled = true;
+    } else {
+        emailError.textContent = "";
+        document.getElementById('submitBtn').disabled = false;
+    }
+}
+
+
+    function validatePhone() {
+        const phoneInput = document.getElementById("phone");
+        const phoneError = document.getElementById("phone-error");
+        const phoneValue = phoneInput.value.trim();
+
+        if (!phoneValue) {
+			phoneError.textContent = "";
+			document.getElementById('submitBtn').disabled = false;
+            return;
+        }
+
+        if (!phoneRegex.test(phoneValue)) {
+            phoneError.textContent = "Vui lòng nhập đúng định dạng số điện thoại (vd: 0925886544)";
+			document.getElementById('submitBtn').disabled = true;
+        } else {
+			phoneError.textContent = "";
+			document.getElementById('submitBtn').disabled = false;
+        }
+    }
+	document.addEventListener("DOMContentLoaded", function () {
+		const nameInput = document.getElementById("c_name"); // Input tên khách hàng
+		const submitBtn = document.getElementById("submitBtn"); // Nút Submit
+
+		// Hàm kiểm tra và cập nhật trạng thái nút Submit
+		function toggleSubmitButton() {
+			if (nameInput.value.trim() === "") {
+				submitBtn.disabled = true; // Disable nếu tên khách hàng trống
+			} else {
+				submitBtn.disabled = false; // Enable nếu có tên khách hàng
+			}
+		}
+
+		// Kiểm tra khi người dùng nhập hoặc xóa nội dung
+		nameInput.addEventListener("input", toggleSubmitButton);
+
+		// Kiểm tra trạng thái ban đầu khi trang tải
+		toggleSubmitButton();
+	});
+
+</script>

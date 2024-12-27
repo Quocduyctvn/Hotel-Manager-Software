@@ -1,0 +1,75 @@
+﻿@model IEnumerable<Hotel.Data.Entities.AppRentalPackage>
+
+<div class="container-fluid py-4" style="background-color: #f9faff; z-index: 1;">
+    <div class="row py-2 h3 pt-3 m-0 text-center" style="padding: 0 160px; color: #07377a;">
+        <span class="col-auto mx-auto pb-3" style=" border-bottom: 4px solid rgb(0, 66, 188);">Bảng phí dịch vụ phần mềm quản lý Khách sạn & Nhà nghỉ</span>
+    </div>
+    <div class="row pt-0 m-0" style="padding: 0 160px;">
+        <div class="col">
+            <div class="row mt-3">
+                @foreach(var item in Model){
+                    <div class="col text-center p-0 pb-4 mx-2" style=" border-radius: 20px; background-color: #f3f3f3; box-shadow: 0 10px 10px rgb(116, 165, 255);">
+                        <div class="text-center m-0 p-4" style="background-color: #dbebfd; border-radius: 20px 20px 0 0; ">
+                            <span style="color: #783205cc; font-weight: 540; font-size: 25px">@item.Name</span>
+                            <div style="font-size: 26px">
+                                @if (item.Price == 0)
+                                {
+                                    <span>Miễn phí</span>
+                                }
+                                else
+                                {
+                                    @string.Format("{0:#,0.#}", @item.Price) <sup>đ</sup>
+                                }
+                            </div>
+                        </div>
+                        <div class="px-3 my-3">
+                            <i class="fab fa-battle-net"></i> 
+                            @if(item.AccountLimit == 0)
+                            {
+                                <span> Không giới hạn tài khoản</span>
+                            }
+                            else
+                            {
+                                <span>Giới hạn @item.AccountLimit tài khoản truy cập</span>
+                            }
+                        </div>
+                        <div class="px-3 my-3">
+                            <i class="fab fa-battle-net"></i> Hỗ trợ qua tổng đài
+                        </div>
+                        <div class="px-3 my-3">
+                            <i class="fab fa-battle-net"></i>
+                            @if (item.RoomLimit == 0)
+                            {
+                                <span> Không giới hạn số lượng phòng</span>
+                            }
+                            else
+                            {
+                                <span>Giới hạn tối đa @item.AccountLimit phòng </span>
+                            }
+                        </div>
+                        <div class="px-3 my-3">
+                            <i class="fab fa-battle-net"></i> Không giới hạn tính năng cơ bản
+                        </div>
+                        <div class="px-3 my-3">
+                            <i class="fab fa-battle-net"></i> 
+                            @item.UsageTraining
+                        </div>
+                        <div class="px-3 my-3">
+                            @if (item.VisualReport == true)
+                            {
+                                <i class="fab fa-battle-net"></i>
+                                <span> Báo cáo trực quan bằng biểu đồ</span>
+                            }
+                        </div>
+                        <a asp-action="Package" asp-route-id="@item.Id">
+                            <label class="golden-button mt-4" style=" cursor: pointer; border-radius: 23px; ">
+                                <span class="golden-text fw-bold px-5">Đăng ký ngay</span>
+                            </label>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+    

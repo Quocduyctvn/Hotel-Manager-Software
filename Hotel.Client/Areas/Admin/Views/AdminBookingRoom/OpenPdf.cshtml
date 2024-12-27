@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open PDF</title>
+</head>
+<body>
+    <button id="openPdfBtn" style="display:none;" onclick="openPdf()">Mở PDF</button>
+    <script>
+        @{
+            var fileName = TempData["Path"] as string; // Đường dẫn file PDF từ server
+        }
+
+            window.onload = function () {
+                // Tự động kích hoạt sự kiện mở PDF
+                document.getElementById('openPdfBtn').click();
+
+                // Chuyển hướng sau một thời gian (tuỳ chỉnh nếu cần)
+                setTimeout(function () {
+                    window.location.href = '/Admin/AdminBookingRoom/';
+                }, 1000); // 1 giây
+            }
+
+        function openPdf() {
+            var pdfUrl = '@fileName'; // Đường dẫn file PDF
+            var newTab = window.open(pdfUrl, '_blank');
+
+            if (newTab) {
+                // Chờ một chút trước khi gọi in
+                setTimeout(function () {
+                    newTab.print(); // Tự động mở giao diện in
+                }, 500); // 0.5 giây
+            } else {
+                alert("Trình duyệt của bạn đã chặn pop-up.");
+            }
+        }
+    </script>
+    <p>Đang mở file PDF...</p>
+</body>
+</html>

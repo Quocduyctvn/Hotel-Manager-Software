@@ -1,0 +1,106 @@
+﻿@using Hotel.Data.Entities
+ @model Hotel.Client.Areas.Admin.DTOs.Room.RoomDTOs
+ @{
+	var RoomCate = TempData["RoomCate"] as List<AppRoomCate>;
+	var Floor = TempData["Floor"] as List<AppFloor>;
+ }
+
+<div class="modal fade" id="CreateRoom" tabindex="-1" role="dialog" aria-labelledby="CreateRoomLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content" style="width: 700px">
+			<form asp-action="Create" asp-controller="AdminRoom" area="Admin" method="POST" id="createRoomForm" >
+				<div class="modal-header">
+					<h3 class="modal-title fs-5" id="CreateRoomLabel">Thêm mới phòng</h3>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-6">
+							<div class="py-2">Tên phòng</div>
+							<input type="text" asp-for="Name" class="form-control" placeholder="vd: P-102" required />
+							<span asp-validation-for="Name" class="text-danger"></span>
+
+							<div class="py-2">Hạng phòng</div>
+							<select asp-for="IdRoomCate" class="form-control form-select px-2 ps-0 text-center border border-secondary" required>
+								<option value="">---Chọn hạng phòng--</option>
+								@foreach (var item in RoomCate)
+								{
+									<option value="@item.Id">@item.Name</option>
+								}
+							</select>
+							<span asp-validation-for="IdRoomCate" class="text-danger"></span>
+
+							<div class="py-2">Tầng/khu vực</div>
+							<select asp-for="IdFloor" class="form-control form-select px-2 ps-0 text-center border border-secondary" required>
+								<option value="">---Chọn tầng--</option>
+								@foreach (var item in Floor)
+								{
+									<option value="@item.Id">@item.FloorNumber</option>
+								}
+							</select>
+							<span asp-validation-for="IdFloor" class="text-danger"></span>
+
+							
+						</div>
+						<div class="col-6">
+							<div class="py-2">Bắt đầu sử dụng</div>
+							<input type="date" asp-for="UseStartDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" id="useStartDate" required />
+							<span asp-validation-for="UseStartDate" class="text-danger"></span>
+
+							<div class="py-2">Mô tả phòng</div>
+							<textarea class="form-control" asp-for="Desc" rows="4"></textarea>
+							<span asp-validation-for="Desc" class="text-danger"></span>
+
+						</div>
+					</div>
+					<div class="row w-100 mt-4">
+						<span class="mx-2" style="font-size: 15px">*Lưu ý:</span>
+					</div>
+					<div class="row w-100">
+						<p class="mx-2 my-0"> <span class="ps-2 text-danger ps-5" style="font-size: 15px">- Phòng sẽ được áp dụng theo giá và tiện nghi của hạng phòng</span></p>
+						<p class="mx-2 my-0"> <span class="ps-2 text-danger ps-5" style="font-size: 15px">- Khi thay đổi trạng thái phòng sang 'Tạm ngưng' sẽ không còn hiển thị trên màn hình thu ngân để thực hiện đặt phòng</span></p>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Hủy</button>
+					<button type="submit" class="btn btn-primary" id="submitBtn" disabled>Thêm</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		const form = document.getElementById("createRoomForm");
+		const submitBtn = document.getElementById("submitBtn");
+		const useStartDate = document.getElementById("useStartDate");
+
+		// Thiết lập giá trị min cho trường ngày bắt đầu sử dụng
+		const today = new Date().toISOString().split("T")[0];
+		useStartDate.setAttribute("min", today);
+
+		// Thiết lập thông báo tùy chỉnh cho trường ngày bắt đầu sử dụng
+		useStartDate.addEventListener("input", function () {
+			if (useStartDate.value < today) {
+				useStartDate.setCustomValidity("Vui lòng nhập giá trị lớn hơn hoặc bằng " + today + ".");
+			} else {
+				useStartDate.setCustomValidity("");
+			}
+		});
+
+		// Kiểm tra tính hợp lệ của tất cả các trường và kích hoạt nút submit
+		const checkFormValidity = () => {
+			submitBtn.disabled = !form.checkValidity();
+		};
+
+		// Lắng nghe các thay đổi trong các trường nhập liệu
+		form.querySelectorAll("input, select, textarea").forEach(field => {
+			field.addEventListener("input", checkFormValidity);
+		});
+	});
+
+</script>
+

@@ -1,0 +1,30 @@
+﻿@model Hotel.Client.Areas.Admin.DTOs.Floor.FloorDTOs
+
+
+<div class="modal fade" id="CreateFloor" tabindex="-1" role="dialog" aria-labelledby="CreateFloorLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<form asp-action="Create" asp-controller="AdminFloor" area="Admin" method="POST">
+				<div class="modal-header">
+					<h3 class="modal-title fs-5" id="CreateFloorLabel">Thêm mới tầng</h3>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="py-2">Tên tầng</div>
+					<input type="text" asp-for="FloorNumber" class="form-control" placeholder="Nhập tên tầng" />
+					<span asp-validation-for="FloorNumber" class="text-danger"></span>
+
+					<div class="py-2"> Mô tả tầng</div>
+					<textarea class="form-control" asp-for="Desc" rows="4"> </textarea>
+					<span asp-validation-for="Desc" class="text-danger"></span>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Hủy</button>
+					<button type="submit" class="btn btn-primary">Thêm</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

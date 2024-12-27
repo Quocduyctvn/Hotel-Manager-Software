@@ -1,0 +1,133 @@
+﻿@using Hotel.Share.Enums
+@model Hotel.Data.Entities.AppBookingRoom;
+
+
+<div class="modal fade" id="CheckOutPopup" tabindex="-1" role="dialog" aria-labelledby="CheckOutPopupLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content" style="max-width: 1600px; width: 100%; padding:0 7px 15px">
+			<!-- Header -->
+			<div class="modal-header d-flex justify-content-between align-items-center" style="padding-bottom: 3px; padding-right: 4px">
+				<div class="modal-title" style="font-size: 18px; font-weight: bold" id="CheckOutPopupLabel">
+					Chi tiết @Model.appRoom.Name
+				</div>
+				<div class="d-flex align-items-center">
+					<button data-toggle="modal"
+							data-target="#CancelBooking" class="btn btn-outline-danger mx-2" title="Hủy đặt phòng">
+						<i class="fas fa-trash-alt"></i>
+					</button>
+					<!-- Icon Đóng -->
+					<a type="button" class="close" style="border: none; padding: 0 3px; margin: 0 0 0 5px" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true" style="font-size:36px">&times;</span>
+					</a>
+				</div>
+			</div>
+
+			<!-- Body -->
+			<div class="modal-body">
+				<!-- Dòng thông tin phòng -->
+				<div class="">
+					<span class="fw-bold">Phòng @Model.appRoom.appRoomCate.Name</span>
+					@if (@Model.appRoom.Status == RoomStatus.CHECKING_IN)
+					{
+						<span class="badge" style="background-color: #f80">
+							Đang chờ sử dụng
+						</span>
+
+					}
+					@if (@Model.appRoom.Status == RoomStatus.OCCUPIED)
+					{
+						<span class="badge" style="background-color: #f80">
+							Đang sử dụng
+						</span>
+
+					}
+					@if (@Model.appRoom.Status == RoomStatus.CHECKING_OUT)
+					{
+						<span class="badge" style="background-color: #f80">
+							Chuẩn bị trả phòng
+						</span>
+
+					}
+					@if (@Model.appRoom.Status == RoomStatus.OVERDUE)
+					{
+						<span class="badge" style="background-color: #f80">
+							Phòng quá giờ trả
+						</span>
+
+					}
+
+
+				</div>
+
+				<!-- Chi tiết khách hàng -->
+				<div class="row">
+					<div class="col p-0 ">
+						<div class="row mt-3 border border-1" style="padding:11px 8px; border-radius: 10px">
+							<div class="col-6">
+								<p class="mb-1"><strong>Khách hàng:</strong> @Model.appCustHotel.Name</p>
+								<p class="mb-1"><strong>Nhận phòng:</strong>  @Model.CheckInExpectual</p>
+								<p class="mb-1"><strong>Trả phòng:</strong> @Model.CheckOutExpectual</p>
+								@if (Model.CheckOutExpectual.HasValue && Model.CheckOutExpectual.Value < DateTime.Now)
+								{
+									<p>
+										<span class="badge" style="background-color: #ffe6e6; color: #f00">
+											Quá giờ trả phòng dự kiến
+										</span>
+									</p>
+								}
+
+							</div>
+							<div class="col-6">
+								<p class="mb-1"><strong>Mã đặt phòng:</strong> @Model.Code</p>
+								<p class="mb-1">
+									<strong>Thời gian lưu trú:</strong>
+									@{
+										if (Model.CheckOutExpectual.HasValue && Model.CheckInExpectual.HasValue)
+										{
+											var duration = Model.CheckOutExpectual.Value - Model.CheckInExpectual.Value;
+											var days = duration.Days;
+											var hours = duration.Hours;
+											var minutes = duration.Minutes;
+
+											@($"{days} ngày - {hours} giờ - {minutes} phút")
+										}
+										else
+										{
+											@("Không xác định")
+										}
+									}
+								</p>
+								<p class="mb-1"><strong>Khách lưu trú:</strong> @Model.Adult người lớn, @Model.Children trẻ em</p>
+							</div>
+						</div>
+
+						<!-- Giá tiền -->
+						<div class="row d-flex justify-content-end " style="margin-top: 25px 15px 0 0">
+							<span><strong>@Model.appRoom.Name</strong></span>
+							<span style="width: 150px; float: right; text-align:end; padding-right: 8px" class="">
+								@string.Format("{0:#,0.#}", @Model.Price) VNĐ
+							</span>
+						</div>
+						<div class="row d-flex justify-content-end">
+							<span><strong>Khách đã trả:</strong></span>
+							<span style="width: 150px; float: right; text-align:end; padding-right: 8px" class=""> 0 VNĐ</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Footer -->
+			<div class="modal-footer">
+				<a asp-action="CheckOut" asp-route-id="@Model.Id"
+						class="btn btn-success">
+					Sửa & Trả phòng
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+@* @await Html.PartialAsync("_ConfirmCheckInPopup", Model)*@
+
+
+@await Html.PartialAsync("_CancelBookingRoomPopup", Model) 

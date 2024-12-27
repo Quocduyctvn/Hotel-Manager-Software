@@ -1,0 +1,74 @@
+﻿
+
+<div class="modal fade" id="DeleteServices" tabindex="-1" aria-labelledby="DeleteServices" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="Delete" method="post">
+                <input type="hidden" id="DlIdServices" name="id" />
+                <div class="modal-header">
+                    <div class="row">
+                        <div class="col-12 h4 text-center">Bạn chắc chắn xóa dịch vụ:</div>
+                        <div class="col-12 h5 text-danger text-center" id="DlNameServices"></div>
+                        <div class="col-12  text-danger mx-2 my-0 text-center" id="servicesStatusWarning" style="display: none; font-size: 15px;">
+                            <span> Dịch vụ đang được sử dụng - không thể xóa.</span>
+                        </div>
+                        <div class="col">
+                            <div class="row w-100 mt-3">
+                                <span class="mx-2" style="font-size: 15px">*Lưu ý:</span>
+                            </div>
+                            <div class="row w-100">
+                                <p class="mx-2 my-0">
+                                    <span class="ps-2 text-danger ps-5" style="font-size: 15px">
+                                        - Dữ liệu liên quan vẫn sẽ được bảo lưu để đảm bảo tính toàn vẹn dữ liệu và hỗ trợ cho các nghiệp vụ liên quan như hóa đơn và lịch sử đặt phòng.
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                    <button type="submit" id="deleteButton" class="btn btn-primary">Xóa</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function DeleteServices(name, id) {
+        document.getElementById('DlIdServices').value = id;
+        document.getElementById('DlNameServices').textContent = `[${name}]`;
+
+        const deleteButton = document.getElementById('deleteButton');
+        const servicesStatusWarning = document.getElementById('servicesStatusWarning');
+
+        // Make an AJAX request to check if the service can be deleted
+        $.ajax({
+            url: '/Admin/AdminServices/CheckDelete', // Adjust the URL as needed
+            type: 'GET',
+            data: { id: id },
+            success: function (response) {
+                if (!response.CanDelete) {
+                    // Service can be deleted
+                    servicesStatusWarning.style.display = 'none';
+                    deleteButton.disabled = false;
+                } else {
+                    // Service cannot be deleted
+                    servicesStatusWarning.style.display = 'block';
+                    deleteButton.disabled = true;
+                }
+            },
+            error: function () {
+                console.error('Error checking delete status.');
+                servicesStatusWarning.style.display = 'block';
+                servicesStatusWarning.textContent = 'Có lỗi xảy ra khi kiểm tra dịch vụ.';
+                deleteButton.disabled = true;
+            }
+        });
+    }
+
+</script>

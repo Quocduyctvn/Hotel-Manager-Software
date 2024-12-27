@@ -1,0 +1,119 @@
+﻿@using Hotel.Data.Entities
+ @model Hotel.Client.Areas.Admin.DTOs.Services.ServicesDTOs
+
+
+<div class="modal fade" id="CreateServices" tabindex="-1" role="dialog" aria-labelledby="CreateServicesLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content" style="width: 700px">
+			<form asp-action="Create" asp-controller="AdminServices" area="Admin" enctype="multipart/form-data" method="POST" id="createServicesForm">
+				<div class="modal-header">
+					<h3 class="modal-title fs-5" id="CreateServicesLabel">Thêm mới Dịch vụ</h3>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-6">
+							<div class="py-2">Tên dịch vụ</div>
+							<input type="text" asp-for="Name" class="form-control" placeholder="vd: Sân bóng đá.." required />
+							<span asp-validation-for="Name" class="text-danger"></span>
+
+							<div class="py-2">Giá thuê/giờ</div>
+							<input type="number" asp-for="Price" id="priceInput" class="form-control" required />
+							<span asp-validation-for="Price" class="text-danger"></span>
+							<span id="priceError" class="text-danger" style="display:none;">Giá không thể âm. Vui lòng nhập lại.</span>
+
+						</div>
+						<div class="col-6">
+							<div class="pt-2">Hình ảnh</div>
+							<div class="row">
+								<div class="col-6 p-0 ms-2">
+									<div class="row w-100 position-relative">
+										<div class="col p-0 mt-2 mx-3" style="opacity: 1;">
+											<div class="row text-center justify-content-center align-items-center"
+												 style="border: dotted 2px rgb(139, 139, 139); height: 115px; position: relative;">
+												<i class="fas fa-cloud-upload-alt" style="font-size: 50px; color: rgb(10, 176, 202)"></i>
+												<img class="img-preview position-absolute"
+													 style="display: none; width: 100%; height: 100%; object-fit: cover;" />
+												<i class="fas fa-times-circle remove-image position-absolute"
+												   style="top: -15px; right: -15px; color: red; cursor: pointer; display: none; font-size: 25px"></i>
+											</div>
+										</div>
+										<div class="col-auto p-0 mt-2 mx-3 position-absolute" style="opacity: 0;">
+											<input data-preview="0" class="file-input" asp-for="FormFile1" type="file"
+												   style="height: 115px; width: 100%; " accept="image/*" />
+										</div>
+									</div>
+									<span class="fs-6 text-success position-relative" style="left: -10px;" id="labelImgPost"></span>
+								</div>
+								<div class="col-6 p-0 ms-2">
+									<div class="row w-100 position-relative">
+										<div class="col p-0 mt-2 mx-3" style="opacity: 1;">
+											<div class="row text-center justify-content-center align-items-center"
+												 style="border: dotted 2px rgb(139, 139, 139); height: 115px; position: relative;">
+												<i class="fas fa-cloud-upload-alt" style="font-size: 50px; color: rgb(10, 176, 202)"></i>
+												<img class="img-preview position-absolute"
+													 style="display: none; width: 100%; height: 100%; object-fit: cover;" />
+												<i class="fas fa-times-circle remove-image position-absolute"
+												   style="top: -15px; right: -15px; color: red; cursor: pointer; display: none; font-size: 25px"></i>
+											</div>
+										</div>
+										<div class="col-auto p-0 mt-2 mx-3 position-absolute" style="opacity: 0;">
+											<input data-preview="0" class="file-input" asp-for="FormFile2" type="file"
+												   style="height: 115px; width: 100%; " accept="image/*" />
+										</div>
+									</div>
+									<span class="fs-6 text-success position-relative" style="left: -10px;" id="labelImgPost"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row px-2">
+						<div class="py-2">Mô tả phòng</div>
+						<textarea class="form-control" asp-for="Desc" rows="4"></textarea>
+						<span asp-validation-for="Desc" class="text-danger"></span>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Hủy</button>
+					<button type="submit" class="btn btn-primary" id="submitBtn" disabled>Thêm</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		const priceInput = document.getElementById("priceInput");
+		const priceError = document.getElementById("priceError");
+		const form = document.getElementById("createServicesForm");
+		const submitBtn = document.getElementById("submitBtn");
+
+		// Hàm kiểm tra tính hợp lệ của form để bật/tắt nút submit
+		const checkFormValidity = () => {
+			submitBtn.disabled = !form.checkValidity();
+		};
+
+		// Sự kiện khi thay đổi giá trị trong ô input Price
+		priceInput.addEventListener("input", function () {
+			let value = parseFloat(priceInput.value);
+
+			// Nếu giá trị âm, hiển thị thông báo lỗi và không cho phép submit
+			if (value < 0) {
+				priceError.style.display = 'inline';  // Hiển thị thông báo lỗi
+				submitBtn.disabled = true;  // Vô hiệu hóa nút submit
+			} else {
+				priceError.style.display = 'none';  // Ẩn thông báo lỗi khi giá trị hợp lệ
+				submitBtn.disabled = !form.checkValidity();  // Kiểm tra lại tính hợp lệ của form
+			}
+		});
+
+		// Lắng nghe các thay đổi trong các trường nhập liệu khác
+		form.querySelectorAll("input, select").forEach(field => {
+			field.addEventListener("input", checkFormValidity);
+		});
+	});
+</script>

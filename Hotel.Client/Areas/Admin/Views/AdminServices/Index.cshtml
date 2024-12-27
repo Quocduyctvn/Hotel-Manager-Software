@@ -1,0 +1,118 @@
+﻿@using Hotel.Client.Areas.Admin.DTOs.Room
+@using Hotel.Client.Areas.Admin.DTOs.Services
+@using Hotel.Data.Entities
+@using Hotel.Share.Const
+@using Hotel.Share.Enums
+@using Hotel.Share.Extension
+@model X.PagedList.PagedList<Hotel.Data.Entities.AppServices>
+@{
+	var stt = 1;
+}
+
+
+<div class="row w-100 fs-4 ">
+	<span class="ps-2" style="font-size: 25px">Danh sách dịch vụ</span>
+</div>
+<hr />
+
+
+@if (User.IsInPermission(AuthConst.AppServices.CREATE))
+{
+	<form asp-action="Index">
+		<div class="row">
+			<!-- Left side: Add new amenity and search bar -->
+			<div class="col-12">
+				<div class="row">
+					<button type="button" class="btn btn-primary w-auto rounded-1 col-2 ms-1" data-toggle="modal" data-target="#CreateServices">
+						<i class="fas fa-plus-circle"></i> Thêm mới
+					</button>
+					<div class="mx-1"></div>
+					<div class="col-3 p-0 ms-4">
+						<input type="text" name="keyword" placeholder="Tìm kiếm ..." class="form-control" style="border-radius: 7px 0 0 7px" />
+					</div>
+					<button type="submit" class="col-auto p-0 border border-none px-2" style="border-radius: 0 7px 7px 0">Tìm Kiếm</button>
+
+				</div>
+			</div>
+		</div>
+	</form>
+}
+
+
+@if (User.IsInPermission(AuthConst.AppServices.VIEW_LIST))
+{
+	<div class="table-responsive mt-3">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr>
+					<th style="width: 50px ">#</th>
+					<th style="width: 95px ">Hình ảnh</th>
+					<th>Dịch vụ</th>
+					<th style="width: 180px " class="text-center">Giá thuê/giờ</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td style="vertical-align: middle;">@stt</td>
+						<td style="vertical-align: middle;" class="text-center">
+							<img src="@((item.appImages?.FirstOrDefault()?.Path) ?? item.appImages?.Skip(1).FirstOrDefault()?.Path )" class="rounded-3" width="45px" height="45px" style="border-radius: 5px" />
+						</td>
+						<td style="vertical-align: middle;">
+							<strong>@item.Name</strong>
+						</td>
+						<td style="vertical-align: middle;" class="text-center">
+							<span class="mx-1"> @string.Format("{0:#,0.#}", item.Price) <sup>VNĐ</sup></span>
+						</td>
+						<td class="justify-content-center text-center" style="width: 150px ">
+							<a asp-action="Subtr" asp-controller="AdminServices" asp-route-id="@item.Id">
+								<i class="fas fa-arrow-alt-circle-up"></i>
+							</a>
+							<a asp-action="Plus" asp-controller="AdminServices" asp-route-id="@item.Id">
+								<i class="fas fa-arrow-alt-circle-down"></i>
+							</a>
+
+							@if (User.IsInPermission(AuthConst.AppServices.UPDATE))
+							{
+								<button type="button" class="text-primary px-2 btn btn-outline-light border border-sacondary"
+								data-toggle="modal" data-target="#UpdateServices"
+								onclick="UpdateServices('@item.Name', '@item.Price',
+										'@(item.appImages?.FirstOrDefault()?.Path )',
+										'@(item.appImages?.Skip(1).FirstOrDefault()?.Path)',
+										'@item.Desc', @item.Id)">
+									<i class="far fa-edit fs-5"></i>
+								</button>
+							}
+
+							@if (User.IsInPermission(AuthConst.AppServices.DELETE))
+							{
+								<button type="button" class="text-danger px-2 btn btn-outline-light border border-sacondary"
+								data-toggle="modal" data-target="#DeleteServices" onclick="DeleteServices('@item.Name', @item.Id)">
+									<i class="fas fa-trash-alt fs-5"></i>
+								</button>
+							}
+						</td>
+					</tr>
+					stt++;
+				}
+			</tbody>
+		</table>
+		@if (TempData["searched"] != null && !string.IsNullOrEmpty(TempData["searched"]!.ToString()))
+		{
+			<div class="text-center">
+				<span class="text-danger"><i>Kết quả tìm kiếm [@Model.Count()] item </i></span> <a asp-action="Index" class="text-decoration-none text-center" style="display: inline-block">Đặt lại</a>
+			</div>
+		}
+	</div>
+
+	<partial name="_Pager" />
+}
+else
+{
+	<div class="row justify-content-center text-red"><span>Giới hạn quyền truy cập - vui lòng liên hệ admin</span></div>
+}
+@await Html.PartialAsync("_AdCreateServices", new ServicesDTOs())
+@await Html.PartialAsync("_AdUpdateServices", new ServicesDTOs())
+@await Html.PartialAsync("_AdDeleteServices")

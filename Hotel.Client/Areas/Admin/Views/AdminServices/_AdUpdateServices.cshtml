@@ -1,0 +1,172 @@
+﻿@using Hotel.Data.Entities
+ @model Hotel.Client.Areas.Admin.DTOs.Services.ServicesDTOs
+
+
+<div class="modal fade" id="UpdateServices" tabindex="-1" role="dialog" aria-labelledby="UpdateServicesLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content" style="width: 700px">
+			<form asp-action="Update" asp-controller="AdminServices" area="Admin" enctype="multipart/form-data" method="POST" id="updateServicesForm">
+				<div class="modal-header">
+					<h3 class="modal-title fs-5" id="UpdateServicesLabel">Cập nhật dịch vụ</h3>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-6">
+							<input type="text" asp-for="Id" id="id" class="form-control d-none" />
+							<div class="py-2">Tên dịch vụ</div>
+							<input type="text" asp-for="Name" id="s_name" class="form-control" placeholder="vd: Sân bóng đá.." required />
+							<span asp-validation-for="Name" class="text-danger"></span>
+
+							<div class="py-2">Giá thuê/giờ</div>
+							<input type="text" value="" asp-for="Price" id="s_price" class="form-control" required />
+							<span asp-validation-for="Price" class="text-danger"></span>
+							<span id="priceError" class="text-danger" style="display:none;">Giá không thể âm. Vui lòng nhập lại.</span>
+							<span id="priceDisplay" class="text-muted"></span>
+						</div>
+						<div class="col-6">
+							<div class="pt-2">Hình ảnh</div>
+							<div class="row">
+								<div class="col-6 p-0 ms-2">
+									<div class="row w-100 position-relative">
+										<div class="col p-0 mt-2 mx-3" style="opacity: 1;">
+											<div class="row text-center justify-content-center align-items-center"
+												 style="border: dotted 2px rgb(139, 139, 139); height: 115px; position: relative;">
+												<i class="fas fa-cloud-upload-alt" style="font-size: 50px; color: rgb(10, 176, 202)"></i>
+												<img class="img-preview position-absolute" id="s_file1"
+													 style="display: none; width: 100%; height: 100%; object-fit: cover;" />
+												<i class="fas fa-times-circle remove-image position-absolute"
+												   style="top: -15px; right: -15px; color: red; cursor: pointer; display: none; font-size: 25px"></i>
+											</div>
+										</div>
+										<div class="col-auto p-0 mt-2 mx-3 position-absolute" style="opacity: 0;">
+											<input data-preview="0" class="file-input" asp-for="FormFile1" type="file"
+												   style="height: 115px; width: 100%; " accept="image/*" />
+										</div>
+									</div>
+									<span class="fs-6 text-success position-relative" style="left: -10px;" id="labelImgPost"></span>
+								</div>
+								<div class="col-6 p-0 ms-2">
+									<div class="row w-100 position-relative">
+										<div class="col p-0 mt-2 mx-3" style="opacity: 1;">
+											<div class="row text-center justify-content-center align-items-center"
+												 style="border: dotted 2px rgb(139, 139, 139); height: 115px; position: relative;">
+												<i class="fas fa-cloud-upload-alt" style="font-size: 50px; color: rgb(10, 176, 202)"></i>
+												<img class="img-preview position-absolute" id="s_file2"
+													 style="display: none; width: 100%; height: 100%; object-fit: cover;" />
+												<i class="fas fa-times-circle remove-image position-absolute"
+												   style="top: -15px; right: -15px; color: red; cursor: pointer; display: none; font-size: 25px"></i>
+											</div>
+										</div>
+										<div class="col-auto p-0 mt-2 mx-3 position-absolute" style="opacity: 0;">
+											<input data-preview="0" class="file-input" asp-for="FormFile2" type="file"
+												   style="height: 115px; width: 100%; " accept="image/*" />
+										</div>
+									</div>
+									<span class="fs-6 text-success position-relative" style="left: -10px;" id="labelImgPost"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row px-2">
+						<div class="py-2">Mô tả phòng</div>
+						<textarea class="form-control" asp-for="Desc" id="s_desc" rows="4"></textarea>
+						<span asp-validation-for="Desc" class="text-danger"></span>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Hủy</button>
+					<button type="submit" class="btn btn-primary" id="submitBtn">Cập nhật</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script>
+	function UpdateServices(name, price, image1, image2, description, id) {
+		// Set the form values
+		document.getElementById('id').value = id;
+		document.getElementById("s_name").value = name;
+		document.getElementById("s_price").value = parseInt(price);
+		document.getElementById("s_desc").value = description;
+
+		// Show preview images if paths are provided
+		const preview1 = document.getElementById("s_file1");
+		const preview2 = document.getElementById("s_file2");
+
+		if (image1) {
+			preview1.src = image1;
+			preview1.style.display = "block";
+		} else {
+			preview1.style.display = "none";
+		}
+		if (image2) {
+			preview2.src = image2;
+			preview2.style.display = "block";
+		} else {
+			preview2.style.display = "none";
+		}
+
+		// Show the modal
+		$('#UpdateServices').modal('show');
+	}
+	document.getElementById('s_price').addEventListener('input', function () {
+		const value = parseInt(this.value);
+		const priceDisplay = document.getElementById('priceDisplay');
+		let formattedValue = "";
+
+		if (isNaN(value) || value < 0) {
+			// Nếu giá trị không phải là số hoặc là số âm
+			formattedValue = "Vui lòng nhập số dương";
+			document.getElementById('submitBtn').disabled = true;
+		} else if (value === 0) {
+			// Hiển thị "0 VND" nếu giá trị là 0
+			formattedValue = "0 VND";
+			document.getElementById('submitBtn').disabled = false;
+		} else if (value < 1000) {
+			// Hiển thị giá trị dưới 1000 VND
+			formattedValue = value + " đồng";
+			document.getElementById('submitBtn').disabled = false;
+		} else if (value >= 1000 && value < 1000000) {
+			// Hiển thị giá trị từ 1 nghìn đến dưới 1 triệu đồng
+			const thousands = Math.floor(value / 1000);
+			const remainder = value % 1000;
+
+			if (remainder === 0) {
+				// Trường hợp không có số lẻ sau "nghìn"
+				formattedValue = thousands + " nghìn đồng";
+			} else {
+				// Trường hợp có số lẻ sau "nghìn"
+				formattedValue = thousands + " nghìn " + remainder + " đồng";
+			}
+			document.getElementById('submitBtn').disabled = false;
+		} else if (value >= 1000000) {
+			// Hiển thị giá trị từ 1 triệu đồng trở lên
+			const millions = Math.floor(value / 1000000);
+			const thousands = Math.floor((value % 1000000) / 1000);
+			const remainder = value % 1000;
+
+			if (thousands === 0 && remainder === 0) {
+				// Trường hợp không có số lẻ sau "triệu"
+				formattedValue = millions + " triệu đồng";
+			} else if (remainder === 0) {
+				// Trường hợp không có số lẻ sau "nghìn"
+				formattedValue = millions + " triệu " + thousands + " nghìn đồng";
+			} else if (thousands === 0) {
+				// Trường hợp chỉ có lẻ đồng sau "triệu"
+				formattedValue = millions + " triệu " + remainder + " đồng";
+			} else {
+				// Trường hợp có cả "nghìn" và "đồng" lẻ sau "triệu"
+				formattedValue = millions + " triệu " + thousands + " nghìn " + remainder + " đồng";
+			}
+			document.getElementById('submitBtn').disabled = false;
+		}
+
+		// Cập nhật thông báo hiển thị
+		priceDisplay.textContent = formattedValue;
+	});
+</script>

@@ -1,0 +1,170 @@
+﻿@using Hotel.Share.Const
+@using Hotel.Share.Enums
+@using Hotel.Share.Extension
+@model Hotel.Client.Areas.Admin.DTOs.SettingTime.Times
+
+
+@if (User.IsInPermission(AuthConst.AppDateTypeWeek.CREATE))
+{
+    <form asp-action="Update" method="post">
+        <div class="row fs-4 pt-2 align-items-center">
+            <div class="col">
+                <div class="row w-100 fs-4 ">
+                    <span class="ps-2" style="font-size: 25px">Thiết lặp ngày trong tuần</span>
+                </div>
+            </div>
+            <div class="col d-flex justify-content-end">
+                <button type="submit" class="btn btn-success js-btn-import" style="margin-left: 10px" name="submitAction" value="createAndStay">
+                    <i class="far fa-edit"></i> Cập nhật
+                </button>
+            </div>
+        </div>
+        <hr />
+        <div class="row w-100">
+            <span class="ps-2" style="font-size: 18px">Ngày thường</span>
+        </div>
+
+        <div class="row w-100 pt-3">
+            @for (int i = 1; i <= 7; i++)
+            {
+                @if (i == 7)
+                {
+                    <div class="col-auto">
+                        <div class="form-group" style="margin-right: 15px">
+                            <div class="form-check form-switch mb-3">
+                                <input type="checkbox" id="days-0" data-id="0" class="form-check-input check-days"
+                                @(Model != null && !string.IsNullOrEmpty(Model.IdDays) && Model.IdDays.Split(',').Select(int.Parse).Contains(0) ? "checked" : "") />
+                                <label class="form-check-label" for="days-0">Chủ nhật</label>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-auto">
+                        <div class="form-group" style="margin-right: 15px">
+                            <div class="form-check form-switch mb-3">
+                                <input type="checkbox" id="days-@i" data-id="@i" class="form-check-input check-days"
+                                @(Model != null && !string.IsNullOrEmpty(Model.IdDays) && Model.IdDays.Split(',').Select(int.Parse).Contains(i) ? "checked" : "") />
+                                <label class="form-check-label" for="days-@i">Thứ @(i + 1)</label>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        <div class="row w-100">
+            <span class="ps-2" style="font-size: 18px">Ngày cuối tuần</span>
+        </div>
+
+
+        <div class="row w-100 pt-3">
+            @for (int i = 1; i <= 7; i++)
+            {
+                @if (i == 7)
+                {
+
+                    <div class="col-auto">
+                        <div class="form-group" style="margin-right: 15px">
+                            <div class="form-check form-switch mb-3">
+                                <input type="checkbox" id="holidays-0" data-id="0" class="form-check-input check-holidays"
+                                @(Model != null && !string.IsNullOrEmpty(Model.IdHolidays) && Model.IdHolidays.Split(',').Select(int.Parse).Contains(0) ? "checked" : "") />
+                                <label class="form-check-label" for="holidays-0">Chủ nhật</label>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-auto">
+                        <div class="form-group" style="margin-right: 15px">
+                            <div class="form-check form-switch mb-3">
+                                <input type="checkbox" id="holidays-@i" data-id="@i" class="form-check-input check-holidays"
+                                @(Model != null && !string.IsNullOrEmpty(Model.IdHolidays) && Model.IdHolidays.Split(',').Select(int.Parse).Contains(i) ? "checked" : "") />
+                                <label class="form-check-label" for="holidays-@i">Thứ @(i + 1)</label>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        <div class="row w-100">
+            <span class="ps-2 " style="font-size: 15px">*Lưu ý:</span>
+        </div>
+        <p class="m-0"> <span class="ps-2 text-danger ps-5" style="font-size: 15px">- Việc thiết lặp ngày trong tuần sẽ liên quan về giá thuê của từng hạng phòng khách sạn</span></p>
+        <p class="m-0"> <span class="ps-2 text-danger ps-5" style="font-size: 15px">- Không thiết lặp ngày thường và ngày cuối tuần trùng nhau</span></p>
+
+
+        <!-- Thêm input ẩn để lưu các giá trị đã chọn -->
+        <input type="hidden" asp-for="IdDays" id="IdDays" name="IdDays" />
+        <input type="hidden" asp-for="IdHolidays" id="IdHolidays" name="IdHolidays" />
+
+    </form>
+}
+else
+{
+    <div class="row justify-content-center text-red"><span>Giới hạn quyền truy cập - vui lòng liên hệ admin</span></div>
+}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Quản lý các checkbox cho ngày thường
+        const checkboxesDays = document.querySelectorAll('.check-days');
+        const hiddenInputDays = document.getElementById('IdDays');
+
+        // Khởi tạo selectedDays từ giá trị của IdDays
+        let selectedDays = hiddenInputDays.value ? hiddenInputDays.value.split(',') : [];
+
+        // Đánh dấu các checkbox đã chọn
+        checkboxesDays.forEach(function (checkbox) {
+            const dayValue = checkbox.getAttribute('data-id');
+            if (selectedDays.includes(dayValue)) {
+                checkbox.checked = true; // Đánh dấu checkbox nếu đã chọn
+            }
+
+            // Khi một checkbox được chọn hoặc bỏ chọn
+            checkbox.addEventListener('change', function () {
+                if (checkbox.checked) {
+                    if (!selectedDays.includes(dayValue)) {
+                        selectedDays.push(dayValue);
+                    }
+                } else {
+                    selectedDays = selectedDays.filter(item => item !== dayValue);
+                }
+
+                // Cập nhật giá trị của input ẩn
+                hiddenInputDays.value = selectedDays.join(',');
+            });
+        });
+
+        // Quản lý các checkbox cho ngày cuối tuần
+        const checkboxesHolidays = document.querySelectorAll('.check-holidays');
+        const hiddenInputHolidays = document.getElementById('IdHolidays');
+
+        // Khởi tạo selectedDays từ giá trị của IdHolidays
+        let selectedHolidays = hiddenInputHolidays.value ? hiddenInputHolidays.value.split(',') : [];
+
+        // Đánh dấu các checkbox đã chọn
+        checkboxesHolidays.forEach(function (checkbox) {
+            const holidayValue = checkbox.getAttribute('data-id');
+            if (selectedHolidays.includes(holidayValue)) {
+                checkbox.checked = true; // Đánh dấu checkbox nếu đã chọn
+            }
+
+            // Khi một checkbox được chọn hoặc bỏ chọn
+            checkbox.addEventListener('change', function () {
+                if (checkbox.checked) {
+                    if (!selectedHolidays.includes(holidayValue)) {
+                        selectedHolidays.push(holidayValue);
+                    }
+                } else {
+                    selectedHolidays = selectedHolidays.filter(item => item !== holidayValue);
+                }
+
+                // Cập nhật giá trị của input ẩn
+                hiddenInputHolidays.value = selectedHolidays.join(',');
+            });
+        });
+    });
+</script>

@@ -1,0 +1,25 @@
+﻿
+<div class="modal fade" id="CreateAmenity" tabindex="-1" role="dialog" aria-labelledby="CreateAmenityLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<form asp-action="Create" asp-controller="AdminAmenity" area="Admin" method="POST">
+				<div class="modal-header">
+					<h3 class="modal-title fs-5" id="CreateAmenityLabel">Thêm mới tiện nghi</h3>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="py-2">Tên tiện nghi</div>
+					<input type="text" name="name" class="form-control" placeholder="Nhập tên tiện nghi" />
+					<div class="py-2"> Mô tả tiện nghi</div>
+					<textarea class="form-control" name="desc" rows="4"> </textarea>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Hủy</button>
+					<button type="submit" class="btn btn-primary">Thêm</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

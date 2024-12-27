@@ -1,0 +1,185 @@
+﻿
+<div class="row" style="font-size: 25px; font-weight:bold; margin-bottom: 10px; padding-left: 3px">
+	Báo cáo Đặt phòng
+</div>
+
+<div class="row">
+	<div class="col-6" style="padding-left: 20px">
+
+		<span style="font-size: 17px; border-bottom: 3px solid green">Kiểu hiển thị ( biểu đồ )</span>
+		<div class="row mt-2" style="padding-left: 5px">
+			<div class="col-6  p-0" style="padding-left: 18px">
+				<input type="radio" name="chartType" value="bar" id="bar" checked>
+				<label for="bar">Biểu đồ cột</label>
+			</div>
+			<div class="col-6  p-0" style="padding-left: 18px">
+				<input type="radio" name="chartType" value="line" id="line">
+				<label for="line">Biểu đồ đường</label>
+			</div>
+		</div>
+
+		<span style="font-size: 17px; border-bottom: 3px solid green"> Bộ lọc thời gian </span>
+		<div class="row mt-2">
+			<div class="col-6  p-0" >
+				<span style="padding-left: 8px">Theo ngày và tuần</span>
+				<div style="padding-left: 18px">
+					<input type="radio" name="timeRange" id="today" value="today">
+					<label for="today">Hôm nay</label>
+				</div>
+				<div style="padding-left: 18px">
+					<input type="radio" name="timeRange" id="yesterday" value="yesterday">
+					<label for="yesterday">Hôm qua</label>
+				</div>
+				<div style="padding-left: 18px">
+					<input type="radio" name="timeRange" id="thisWeek" value="thisWeek" checked>
+					<label for="thisWeek">Tuần này</label>
+				</div>
+				<div style="padding-left: 18px">
+					<input type="radio" name="timeRange" id="lastWeek" value="lastWeek">
+					<label for="lastWeek">Tuần trước</label>
+				</div>
+				<div style="padding-left: 18px">
+					<input type="radio" name="timeRange" id="last7Days" value="last7Days">
+					<label for="last7Days">7 ngày qua</label>
+				</div>
+			</div>
+
+			<div class="col-6 p-0">
+				<span>Theo tháng và quý</span>
+				<div style="padding-left: 15px">
+					<input type="radio" name="timeRange" id="thisMonth" value="thisMonth">
+					<label for="thisMonth">Tháng này</label>
+				</div>
+				<div style="padding-left: 15px">
+					<input type="radio" name="timeRange" id="lastMonth" value="lastMonth">
+					<label for="lastMonth">Tháng trước</label>
+				</div>
+				<div style="padding-left: 15px">
+					<input type="radio" name="timeRange" id="last30Days" value="last30Days">
+					<label for="last30Days">30 ngày qua</label>
+				</div>
+				<div style="padding-left: 15px">
+					<input type="radio" name="timeRange" id="thisQuarter" value="thisQuarter">
+					<label for="thisQuarter">Quý này</label>
+				</div>
+				<div style="padding-left: 15px">
+					<input type="radio" name="timeRange" id="lastQuarter" value="lastQuarter">
+					<label for="lastQuarter">Quý trước</label>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<span style="padding-left: 8px">Theo năm</span>
+			<div class="col-12" style="padding-left: 18px">
+				<input type="radio" name="timeRange" id="thisYear" value="thisYear">
+				<label for="thisYear">Năm nay</label>
+			</div>
+			<div class="col-12" style="padding-left: 18px">
+				<input type="radio" name="timeRange" id="lastYear" value="lastYear">
+				<label for="lastYear">Năm trước</label>
+			</div>
+		</div>
+		<button id="exportExcel" class="btn btn-success mt-2">Xuất Excel</button>
+
+	</div>
+
+	<div class="col-6 " style="display: flex; justify-content: center;">
+		<canvas id="myChart" style="width:100%; max-width:600px; height:400px"></canvas>
+	</div>
+</div>
+
+<script>
+	let currentChart;
+
+	async function loadChart() {
+		try {
+			// Lấy giá trị của các tùy chọn từ giao diện
+			const timeRange = document.querySelector('input[name="timeRange"]:checked').value;
+			const chartType = document.querySelector('input[name="chartType"]:checked').value;
+
+			// Gửi yêu cầu Fetch đến API để lấy dữ liệu
+			const response = await fetch(`/AdminReport/BookingRoomChart?timeRange=${timeRange}`);
+			if (!response.ok) throw new Error(`Lỗi API: ${response.status}`);
+			const data = await response.json();
+
+			// Lấy dữ liệu từ API
+			const xValues = data.labels;
+			const yValues = data.data;
+
+			// Hủy biểu đồ cũ (nếu đã tồn tại)
+			if (currentChart) currentChart.destroy();
+
+			// Tạo biểu đồ mới
+			const ctx = document.getElementById("myChart").getContext("2d");
+			currentChart = new Chart(ctx, {
+				type: chartType, // Loại biểu đồ: bar hoặc line
+				data: {
+					labels: xValues,
+					datasets: [{
+						label: "Số lượng đặt phòng",
+						backgroundColor: chartType === "bar" ? "rgba(0,0,255,0.5)" : "rgba(0,0,0,0)",
+						borderColor: "rgba(0,0,255,1.0)",
+						borderWidth: 2,
+						data: yValues,
+						fill: false // Không tô màu dưới đường trong biểu đồ line
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					title: {
+						display: true,
+						text: "Thống kê số lượng đặt phòng"
+					},
+					legend: {
+						display: true
+					},
+					tooltips: {
+						enabled: true,
+						callbacks: {
+							label: function (tooltipItem, data) {
+								const label = data.datasets[tooltipItem.datasetIndex].label || '';
+								const value = tooltipItem.yLabel;
+								const date = data.labels[tooltipItem.index];
+								return `${label}: ${value} (Ngày: ${date})`;
+							}
+						}
+					},
+					scales: {
+						xAxes: [{
+							gridLines: { display: false }
+						}],
+						yAxes: [{
+							ticks: { beginAtZero: true }
+						}]
+					}
+				}
+			});
+		} catch (error) {
+			console.error('Lỗi khi tải dữ liệu:', error);
+			alert('Không thể tải dữ liệu biểu đồ!');
+		}
+	}
+
+	// Thêm sự kiện khi thay đổi tùy chọn
+	document.querySelectorAll('input[name="timeRange"], input[name="chartType"]').forEach(input => {
+		input.addEventListener('change', loadChart);
+	});
+
+	// Tải biểu đồ lần đầu khi tải trang
+	window.onload = loadChart;
+
+	document.getElementById("exportExcel").addEventListener("click", function () {
+		const timeRange = document.querySelector('input[name="timeRange"]:checked').value;
+		window.location.href = `/AdminReport/BookingRoomChart?timeRange=${timeRange}&isExport=true`;
+	});
+</script>
+
+<style>
+	#myChart {
+		height: 400px !important;
+		width: 1400px !important; /* Để tự động điều chỉnh theo chiều ngang */
+	}
+
+</style>

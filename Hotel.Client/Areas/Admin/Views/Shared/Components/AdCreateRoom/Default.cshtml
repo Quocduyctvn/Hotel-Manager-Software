@@ -1,0 +1,46 @@
+﻿ @model Hotel.Client.Areas.Admin.DTOs.Room.RoomDTOs
+
+
+<div class="modal fade" id="CreateRoom" tabindex="-1" role="dialog" aria-labelledby="CreateRoomLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content" style="width: 700px">
+			<form asp-action="Create" asp-controller="AdminRoom" area="Admin" method="POST">
+				<div class="modal-header">
+					<h3 class="modal-title fs-5" id="CreateRoomLabel">Thêm mới phòng</h3>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-6">
+							<div class="py-2">Tên phòng</div>
+							<input type="text" asp-for="Name" class="form-control" placeholder="Nhập tên ngày lễ" />
+							<span asp-validation-for="Name" class="text-danger"></span>
+
+							<div class="py-2">Bắt đầu sử dụng</div>
+							<input type="date" asp-for="UseStartDate" class="form-control" />
+							<span asp-validation-for="UseStartDate" class="text-danger"></span>
+
+							<div class="py-2">Ngày kết thúc</div>
+							<input type="date" name="endDate" class="form-control" />
+						</div>
+						<div class="col-6">
+							<div class="row w-100 mt-2">
+								<span class="mx-2" style="font-size: 15px">*Lưu ý:</span>
+							</div>
+							<div class="row w-100">
+								<p class="mx-2 my-0"> <span class="ps-2 text-danger ps-5" style="font-size: 15px">- Thời gian bắt đầu cho 1 ngày là: 00h 00'</span></p>
+								<p class="mx-2 my-0"> <span class="ps-2 text-danger ps-5" style="font-size: 15px">- Thời gian kết thúc của 1 ngày làngày là: 24h 00'</span></p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Hủy</button>
+					<button type="submit" class="btn btn-primary">Thêm</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

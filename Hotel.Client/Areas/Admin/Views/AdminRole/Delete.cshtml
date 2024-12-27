@@ -1,0 +1,103 @@
+﻿@using Hotel.Share.Const
+@using Hotel.Share.Extension
+@model Hotel.Client.Areas.Admin.DTOs.Role.DeleteRoleDTOs
+@{
+	int count = 1;
+}
+
+@if (User.IsInPermission(AuthConst.AppRole.DELETE)){
+<form asp-action="Delete" method="post">
+    <div class="row w-100 px-3">
+        <div class="col-md-12">
+            <div class="row w-100 mt-2">
+                <div class="col-auto p-0 ps-2">
+                    <a asp-action="Index" asp-controller="AdminRole" class="text-decoration-none">Quản lý danh sách vai trò /</a>
+                </div>
+                <div class="col-auto p-0 ms-1">
+                    <i>Xóa vai trò</i>
+                </div>
+            </div>
+            <div class="row w-100  pt-2" style="font-weight: 500; font-size: 22px">
+                <span class="ps-2">Xác nhận xóa vai trò</span>
+            </div>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="col-5 p-0 ps-4">
+                    <div class="row fs-5">Thông tin vai trò</div>
+                    <div class="row" style="font-size: 12px">
+                        <span class="p-0"><i>Ngày tạo: @Model.CreateDate.ToString("dd/MM/yyyy")</i></span>
+                    </div>
+                    <div class="row mt-3">
+                        <p class="p-0 mb-1 fw-bold">Tên vai trò</p>
+                        <input type="text" asp-for="Name" class="form-control" disabled />
+                    </div>
+                    <div class="row mt-3">
+                        <p class="p-0 mb-1 fw-bold">Mô tả</p>
+                        <input type="text" asp-for="Desc" class="form-control" disabled />
+                    </div>
+                    <div class="row mt-3">
+                        <p class="p-0 mb-1 fw-bold">Tên vai trò thay thế <span class="text-danger">*</span></p>
+                        <select asp-for="IdNewRole" id="idRole" class="form-select form-select-sm form-control" aria-label="Small select example">
+                            <option value="-1">Chọn tên vai trò </option>
+                            @foreach (var item in ViewBag.ListRole)
+                            {
+                                if (item.Id != Model.IdRole && item.Id != null)
+                                {
+                                    <option value="@item.Id.ToString()">@item.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-6 ms-auto p-0" style="padding-left: 20px">
+                    <div class="row mt-3 pe-5" style="padding-left: 30px">
+                        <p class="p-0 mb-1 fs-6 fw-bold">
+                            Có @Model.appUsers.Count tài khoản bị ảnh hưởng <span class="text-danger">*</span>
+                        </p>
+                        @foreach (var item in Model.appUsers)
+                        {
+                            <p class="p-0 mb-1"><span class="fw-bold">@count .</span> @item.Name</p>
+                            count++;
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row w-100 mt-5">
+        <div class="col">
+            <div class="form-group">
+                <button type="submit" class="btn btn-danger px-4 me-2" >
+                    <i class="fas fa-trash-alt"></i> Xóa vai trò
+                </button>
+                <button type="button" class="btn btn-secondary">
+                    <i class="fa fa-undo"></i> Quay lại trang danh sách
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const selectNewRole = document.getElementById("idRole");
+        const deleteButton = document.querySelector('button[type="submit"]');
+
+        if (!selectNewRole || !deleteButton) {
+            console.warn("Không tìm thấy phần tử idRole hoặc nút xóa!");
+            return;
+        }
+
+        const affectedUserCount = @Model.appUsers.Count;
+
+        // Kiểm tra trạng thái ban đầu
+        deleteButton.disabled = (selectNewRole.value === "-1" && affectedUserCount > 0);
+
+        // Lắng nghe sự kiện thay đổi
+        selectNewRole.addEventListener("change", function () {
+            deleteButton.disabled = (selectNewRole.value === "-1");
+        });
+    });
+
+</script>

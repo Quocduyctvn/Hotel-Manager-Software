@@ -1,0 +1,34 @@
+﻿@model Hotel.Client.Areas.Admin.DTOs.Commodity.AddQuantityCommoDTOs
+
+<div class="modal fade" id="AddQuantity" tabindex="-1" aria-labelledby="AddQuantity" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form asp-action="AddQuantity" method="post">
+				<input type="hidden" id="IdCommodity" asp-for="Id" />
+				<div class="modal-header">
+					<div class="row">
+						<span class="col-12 h5">Nhập kho - </span>
+						<span class="col-12 h5 text-danger" id="CommodityName"></span>
+
+						<div class="py-2">Số lượng nhập</div>
+						<input type="text" asp-for="Quantity" class="form-control" />
+						<span asp-validation-for="Quantity" class="text-danger"></span>
+					</div>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+					<button type="submit" class="btn btn-primary">Cập nhật</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script>
+	function AddQuantity(name, id) {
+		document.getElementById('IdCommodity').value = id;
+		document.getElementById('CommodityName').textContent = `[${name}]`;
+	}
+</script>
