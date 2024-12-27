@@ -1,0 +1,153 @@
+﻿/* Tùy chỉnh thanh cuộn cho trình duyệt hỗ trợ */
+::-webkit-scrollbar {
+    width: 1px; /* Độ rộng của thanh cuộn */
+    height: 6px; /* Độ cao của thanh cuộn ngang */
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Màu nền của thanh cuộn */
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888; /* Màu thanh trượt */
+    border-radius: 3px; /* Bo góc thanh trượt */
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555; /* Màu thanh trượt khi hover */
+    }
+
+/* Đối với Firefox */
+* {
+    scrollbar-width: thin; /* Độ rộng của thanh cuộn */
+    scrollbar-color: #888 #f1f1f1; /* Màu thanh trượt và nền */
+}
+
+
+
+.required:after {
+  content: ' *';
+  color: red; }
+
+.fit {
+  width: 1%;
+  white-space: nowrap; }
+
+.fake-d-none, .fake-d-none-inline {
+    display: block !important;
+    width: 0;
+    height: 0;
+    padding: 0 !important;
+    border: 0 !important;
+}
+.fake-d-none-inline {
+    display: inline-block !important;
+}
+
+.hover\:pointer:hover {
+    cursor: pointer;
+}
+
+.hover\:text-primary {
+  transition: color 0.3s; }
+  .hover\:text-primary:hover {
+    color: var(--primary); }
+
+.d-backdrop {
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    background-color: rgb(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.d-bg-grey {
+    background-color: rgba(0,0,0,.075) !important;
+}
+
+.toggle-chk:checked ~ .toggle-off,
+.toggle-chk ~ .toggle-on,
+.toggle-chk ~ .toggle-on-inline {
+    display: none !important;
+}
+.toggle-chk:checked ~ .toggle-on-inline {
+    display: inline-block !important;
+}
+.toggle-chk:checked ~ .toggle-on,
+.toggle-chk ~ .toggle-off {
+    display: block !important;
+}
+
+.app-loading {
+    padding-right: 15px!important;
+    overflow: hidden;
+}
+.scale-150 {
+    transform: scale(1.5);
+}
+
+/*====================button login & sigin=======================*/
+.golden-button {
+    touch-action: manipulation;
+    display: inline-block;
+    outline: none;
+    font-family: inherit;
+    font-size: 1em;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 0.3em;
+    height: 2.75em;
+    line-height: 2.5em;
+    text-transform: uppercase;
+    padding: 0 1em;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(110, 80, 20, 0.4), inset 0 -2px 5px 1px rgba(139, 66, 8, 1), inset 0 -1px 1px 3px rgba(250, 227, 133, 1);
+    background-image: linear-gradient( 160deg, #a54e07, #b47e11, #fef1a2, #bc881b, #a54e07 );
+    border: 1px solid #a55d07;
+    color: rgb(120, 50, 5);
+    text-shadow: 0 2px 2px rgba(250, 227, 133, 1);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    background-size: 100% 100%;
+    background-position: center;
+}
+
+    .golden-button:focus,
+    .golden-button:hover {
+        background-size: 150% 150%;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23), inset 0 -2px 5px 1px #b17d10, inset 0 -1px 1px 3px rgba(250, 227, 133, 1);
+        border: 1px solid rgba(165, 93, 7, 0.6);
+        color: rgba(120, 50, 5, 0.8);
+    }
+
+    .golden-button:active {
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(110, 80, 20, 0.4), inset 0 -2px 5px 1px #b17d10, inset 0 -1px 1px 3px rgba(250, 227, 133, 1);
+    }
+/* ==================== Notify ============================*/
+.notyf--dismissable {
+    position: relative;
+}
+
+    .notyf--dismissable .notyf__dismiss {
+        position: absolute;
+        top: 10px; /* Điều chỉnh vị trí */
+        right: 10px; /* Điều chỉnh vị trí */
+        cursor: pointer;
+        font-weight: bold;
+        color: white; /* Màu chữ */
+    }
+
+/*=============smoot ===============*/
+.child-table {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out; /* Tốc độ và độ mượt của hiệu ứng */
+}
+
+    .child-table.show {
+        max-height: 500px; /* Đặt chiều cao tối đa đủ lớn cho bảng con */
+    }
