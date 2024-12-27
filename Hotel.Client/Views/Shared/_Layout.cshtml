@@ -1,0 +1,184 @@
+﻿    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Hotel.Client</title>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/adminLTE/plugins/fontawesome-free/css/all.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/adminLTE/dist/css/adminlte.min.css">
+
+    <link href="~/lib/bs4-toast-snackbar/css/toast-snackbar.css" rel="stylesheet" asp-append-version="true" />
+
+    <link href="~/css/site.css" rel="stylesheet" asp-append-version="true" />
+
+    <link href="~/lib/bs4-autocomplete/css/bs4-autocomplete.css" rel="stylesheet" />
+	<script src="~/js/site.js"></script>
+    <script src="~/lib/tinymce/tinymce.min.js"></script>
+    @* notify  *@
+    <link href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container-fluit p-0 m-0">
+        <div class="container-fluit" style="background-color: rgb(255, 255, 255); z-index: 1; position: sticky; top: 0; border-bottom: 2px solid #a55d0799">
+            <div class="row py-2 pt-2 m-0" style="padding: 0 80px;">
+                <div class="col-auto pointer">
+                    <a asp-action="Index">
+                        <div class="row">
+                            <div class="col p-0">
+                                <img src="~/images/home/logo-hotel.jpg" width="80px" />
+                            </div>
+                            <div class="col p-0">
+                                <h4 class="p-0 mb-0 mt-4" style="color: #064397; font-weight: 600">
+                                    HMSoft.com
+                                </h4>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col d-flex justify-content-end pt-0 pb-2 mt-4">
+                    <div class="row">
+                        <div class="col-auto mt-1 pointer hover-underline" style="font-size: 19px; color: rgb(78, 78, 78); ">Sản phẩm</div>
+                        <div class="col-auto mt-1 pointer hover-underline" style="font-size: 19px; color: rgb(78, 78, 78); ">Khách hàng</div>
+                        <div class="col-auto mt-1 pointer hover-underline" style="font-size: 19px; color: rgb(78, 78, 78);">
+                            <a asp-action="RentalPackage" asp-controller="Home" style="font-size: 19px; color: rgb(78, 78, 78);">
+                                Phí dịch vụ
+                            </a>
+                        </div>
+
+                        <div class="col-auto mt-1 pointer hover-underline" style="font-size: 19px; color: rgb(78, 78, 78);">
+                            <a asp-action="Index" asp-controller="Contact" style="font-size: 19px; color: rgb(78, 78, 78);">
+                                Hỗ trợ
+                            </a>
+                        </div>
+                        <div class="col-auto mt-1 pointer hover-underline" style="font-size: 19px; color: rgb(78, 78, 78);">
+                            <a asp-action="Index" asp-controller="Article" style="font-size: 19px; color: rgb(78, 78, 78);">
+                                Tin tức
+                            </a>
+                        </div>
+                        
+                        <div class="col-auto pointer hover-underline px-1">
+                            <a asp-action="Login" asp-controller="Account">
+                                <button class="btn py-1 text-primary px-3" style="border: 1px solid rgb(0, 208, 255); border-radius: 40px;font-size: 19px; "> Đăng nhập </button>
+                            </a>    
+                        </div>
+                        <div class="col-auto pointer hover-underline px-1">
+                            <a asp-action="RentalPackage" asp-controller="Home">
+                                <button class="btn btn-primary py-1 text-light px-4" style="border: 1px solid rgb(255, 255, 255); border-radius: 40px;font-size: 19px; "> Đăng ký </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluit" style="background-color:#e1eaeb">
+            @RenderBody()
+        </div>
+
+        @await Component.InvokeAsync("MapVietNam")
+        <div class="container-fluit mt-4">
+            <div class="row m-0">
+                <div class="col  pe-3 rounded-2 py-4" style="background-color:#f6f6f6">
+                    <div class="row justify-content-center mt-5" style="font-size: 20px;">
+                        <div class="col-3 pointer p-0">
+                            <div class="row">
+                                <div class="text-uppercase p-0 mb-0 fw-bold fs-5" style="color: #064397; font-weight: 580"> HMSoft.com</div>
+                                <div classs="fw-bold" style="font-size: 15px; padding-top: 5px; margin-left: 3px">Kênh thông tin chuẩn chất lượng</div>
+                            </div>
+                            <div class="row fs-6 mt-4">HMSoft.com tự hào cung cấp giải pháp quản lý khách sạn hiệu quả, nâng cao trải nghiệm khách hàng</div>
+                        </div>
+                        <div class="col-auto p-0 mx-5">
+                            <div class="row">Về <span class="col-auto p-0 text-uppercase ps-3 mb-2 fw-bold" style="margin-left: 3px; color: #064397; font-weight: 510"> HMSoft.com</span> </div>
+                            <div class="row">Trang chủ</div>
+                            <div class="row">Giới thiệu</div>
+                            <div class="row">Blog</div>
+                            <div class="row">Quy định sử dụng</div>
+                            <div class="row">Chính sách bảo mật</div>
+                            <div class="row">Liên hệ</div>
+                        </div>
+                        <div class="col-auto p-0 mx-5">
+                            <div class="row mb-2 fw-bold" style="color: #064397; font-weight: 510">Hỗ trợ khách hàng</div>
+                            <div class="row">Câu hỏi thường gặp</div>
+                            <div class="row">Chuyển đổi số trong ngành du lịch là gì?  </div>
+                            <div class="row">HMSoft.com có trụ sở tại đâu?</div>
+                            <div class="row">Mục tiêu và sứ mệnh của HMSoft.com</div>
+                        </div>
+                        <div class="col-auto p-0 mx-5">
+                            <div class="row mb-1 fw-bold" style="color: #064397; font-weight: 510">Liên hệ chúng tôi</div>
+                            <div class="row">
+                                <div class="col-auto p-0 fs-3 me-2">
+                                    <i class="fab fa-facebook" style="color: #002b75;"></i>
+                                </div>
+                                <div class="col-auto p-0 fs-3 me-2" style="margin-left: 5px; ">
+                                    <i class="fab fa-youtube" style="color: #ff0000;"></i>
+                                </div>
+                                <div class="col-auto p-0 fs-3 me-2" style="margin-left: 5px; ">
+                                    <i class="fab fa-instagram" style="color: #db3997;"></i>
+                                </div>
+                            </div>
+                            <div class="row mb-1 fw-bold" style="color: #064397; font-weight: 510">Phương thức thanh toán</div>
+                            <div class="row">
+                                <div class="col-auto p-0 fs-3 me-2">
+                                    <i class="fab fa-cc-visa" style="color: #230098;"></i>
+                                </div>
+                                <div class="col-auto p-0 fs-3 me-2" style="margin-left: 5px; ">
+                                    <i class="fab fa-cc-paypal" style="color: #6198f7;"></i>
+                                </div>
+                                <div class="col-auto p-0 fs-3 me-2" style="margin-left: 5px; ">
+                                    <i class="fas fa-money-check-alt" style="color: #006a63;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center mt-5">
+                        <div class=" col-auto text-uppercase fw-bold" style=" color: #064397; font-weight: 510">Giải Pháp Quản Trị Khách Sạn Toàn Diện Nâng Tầm Dịch Vụ và Khẳng Định Thương Hiệu Trên Thị Trường</div>
+                    </div>
+                    <div class="row justify-content-center mt-1">
+                        <div class=" col-auto fw-bold">Chăm sóc khách hàng: 0901 007 221</div>
+                    </div>
+                    <div class="row justify-content-center mt-1">
+                        <div class="col-auto">Email: cskhCanTho@gmail.com</div>
+                    </div>
+                    <div class="row justify-content-center mt-1 mb-3">
+                        <div class="col-auto">Địa chỉ: Đường 3/2 - Phường Hưng Lợi - Quận Ninh Kiều - Thành Phố Cần Thơ</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    @* Notify  *@
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+    <partial name="_Noti" />
+
+    <!-- ./wrapper -->
+    <!-- jQuery -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Thư viện toast-->
+    <script src="~/lib/bs4-toast-snackbar/js/toast-snackbar.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/adminLTE/dist/js/adminlte.min.js"></script>
+    <!-- Validation -->
+    <partial name="_ValidationScriptsPartial" />
+    <!-- Thư viện modal -->
+    <script src="~/lib/bs4-modal/modal.js"></script>
+    <!-- Thư viện autocomplete nhà trồng -->
+    <script src="~/lib/bs4-autocomplete/js/bs4-autocomplete.js"></script>
+    <!-- Javascript dùng chung -->
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script src="~/js/amenities/amenity.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

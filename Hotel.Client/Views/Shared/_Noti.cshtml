@@ -1,0 +1,25 @@
+﻿<script>
+    const beepSound = new Audio('audio/audio-bip.mp3');
+    const notyf = new Notyf({
+        duration: 10000, // Thời gian sống 15 giây
+        dismissible: true // Cho phép tắt thông báo
+    });
+
+    // Kiểm tra và hiển thị thông báo
+    var errMsg = '@TempData["Err"]';
+    var successMsg = '@TempData["Success"]';
+    var wrnMsg = '@TempData["Wrn"]';
+
+    if (errMsg) {
+        beepSound.play();
+        notyf.error(errMsg);
+    }
+    if (successMsg) {
+        beepSound.play();
+        notyf.success(successMsg);
+    }
+    if (wrnMsg) {
+        beepSound.play();
+        notyf.warning(wrnMsg);
+    }
+</script>
