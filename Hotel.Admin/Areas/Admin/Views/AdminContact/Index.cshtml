@@ -1,0 +1,43 @@
+﻿@model IEnumerable<Hotel.Data.Entities.AppContact>
+
+@{
+	ViewData["Title"] = "Danh sách liên hệ";
+}
+
+<h1>Danh sách liên hệ</h1>
+
+<table class="table table-hover table-bordered">
+	<thead>
+		<tr class="text-center">
+
+			<th>Id</th>
+			<th>Tên</th>
+			<th>Chi tiết</th>
+			<th>
+				Tùy chỉnh
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>@item.Id</td>
+				<td>@item.Name</td>
+				<td>
+					<p>EMail: @item.Email</p>
+					<p>Số điện thoại: @item.Phone</p>
+					<p>Nội dung: @item.Content</p>
+					@if (item.CreatedDate != null)
+					{
+						<small>Ngày gửi: @item.CreatedDate?.ToString("dd/MM/yyyy HH:mm")</small>
+					}
+				<td>
+					<a asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Xác nhận xóa liên hệ này?')">Xóa</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+<partial name="_Pager" model="Model" />

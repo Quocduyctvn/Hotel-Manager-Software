@@ -1,0 +1,17 @@
+﻿@model Hotel.Admin.Areas.Admin.DTOs.ArticleCate.CreateOrUpdateContactDTO
+
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label">Tên danh mục</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Thêm" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>

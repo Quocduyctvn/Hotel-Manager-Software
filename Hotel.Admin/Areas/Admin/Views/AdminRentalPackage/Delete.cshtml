@@ -1,0 +1,96 @@
+﻿@model Hotel.Data.Entities.AppRentalPackage
+@{
+	var count = 1; 
+}
+
+<div class="col-md-12" style="padding-bottom: 20px">
+	<div class="row w-100 mt-2">
+		<div class="col-auto p-0 ps-2 ">
+			<a asp-action="Index" class="text-decoration-none">Quản lý danh sách gói cho thuê /</a>
+		</div>
+		<div class="col-auto p-0 ms-1">
+			<i>Xóa gói</i>
+		</div>
+	</div>
+	<div class="row w-100 fs-4 pt-2" >
+		<span class="ps-2" style="font-size: 25px">Xác nhận xóa</span>
+	</div>
+	<hr />
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+	<div class="row">
+		<div class="col-6 p-0 ps-4">
+			<div class="row fs-5">
+				Thông tin gói cho thuê
+			</div>
+			<div class="row " style="font-size: 12px">
+				<span class="p-0"><i>Ngày tạo: @(Model.CreatedDate.HasValue ? Model.CreatedDate.Value.ToString("dd/MM/yyyy") : "N/A")</i></span>
+			</div>
+			<div class="row mt-3">
+				<p class="p-0 mb-1 fw-bold">Tên gói cho thuê</p>
+				<input type="text" asp-for="Name" class="form-control" disabled />
+			</div>
+			@if(Model.IdRentalPackageCate == 1)
+			{
+				<div class="row mt-2">
+					<span class="p-0"><i>Tổng thời gian dùng thử: @Model.IdTimeOfPrice 
+							@foreach (var item in ViewBag.Times)
+							{
+								if(item.Id == Model.IdTimeOfTrial)
+								{
+									@item.Name
+								}
+							}
+						</i></span>
+				</div>
+			}
+			@if (Model.appHMSOrders.Count() > 0)
+			{
+				<div class="row mt-3 pe-5" style="margin-left: 2px">
+					<div class="p-0 mb-4 fs-5 fw-bold">Có @Model.appHMSOrders.Count Khách sạn bị ảnh hưởng <span class="text-danger">*</span></div>
+					@foreach (var item in Model.appHMSOrders)
+					{
+						<p class="p-0 mb-1 text-danger"><span class="fw-bold">@count .</span> @item.appHotels.Name</p>
+						count++;
+					}
+				</div>
+			}
+		</div>
+		<div class="col-5 ms-auto p-0" style="margin-left: auto">
+			<div class="alert alert-info mt-0">
+				<span class=" fw-bold ">Lưu ý thay đổi đối với gói cho thuê có ảnh hưởng đối với Khách sạn </span>
+				<div>Trạng thái từ "Hoạt động" sang "Tạm ngừng". Thay đổi này có thể do:</div>
+				<ul>
+					<li>Phiên bản đang được bảo trì hoặc cập nhật.</li>
+					<li>Nhu cầu sử dụng giảm hoặc tạm ngưng cung cấp.</li>
+					<li>Yêu cầu từ khách hàng hoặc chính sách quản lý.</li>
+				</ul>
+				<strong>Lưu ý:</strong> Các khách hàng hiện tại sẽ không bị ảnh hưởng, nhưng không có khách hàng mới nào có thể đăng ký phiên bản này cho đến khi được kích hoạt lại.
+			</div>
+
+		</div>
+
+	</div>
+	<div class="row" style="margin-top: 35px">
+		@if(Model.appHMSOrders.Count() <= 0)
+		{
+			<div class="form-group">
+				<button type="button" class="btn btn-danger js-btn-import">
+					<a asp-action="DeletePackage" asp-controller="AdminRentalPackage" asp-route-id="@Model.Id" class="text-light">
+						<i class="fa fa-file-excel text-light"></i> &nbsp; Xác nhận xóa
+					</a>
+				</button>
+			</div>
+		}else{
+			<div class="form-group">
+				<button type="button" class="btn btn-success text-light js-btn-import">
+					<a asp-action="UpdateStatus" asp-controller="AdminRentalPackage" asp-route-id="@Model.Id" class="text-light">
+						<i class="fa fa-file-excel"></i> &nbsp; Thay đổi trạng thái sang "Tạm ngưng"
+					</a>
+				</button>
+			</div>
+		}
+		<div class="form-group">
+			<partial name="_BackToList" />
+		</div>
+	</div>
+</div>

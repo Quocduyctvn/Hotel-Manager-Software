@@ -1,0 +1,60 @@
+﻿@model X.PagedList.PagedList<Hotel.Data.Entities.AppArticle>
+
+@{
+	ViewData["Title"] = "Index";
+}
+
+<div class="row w-100 fs-4 pt-2">
+	<span class="ps-2" style="font-size: 25px">Danh sách bài viết</span>
+</div>
+<hr />
+<div class="my-2">
+	<a asp-action="Create" class="btn btn-primary">
+		<i class="fas fa-user-plus"></i> &nbsp; Thêm bài mới
+	</a>
+</div>
+
+<table class="table table-hover table-bordered mt-3">
+	<thead class="text-center">
+		<tr>
+			<th style="width: 35px">
+				STT
+			</th>
+			<th>
+				Tên bài viết
+			</th>
+			<th style="width: 150px">
+				Ảnh
+			</th>
+			<th style="width: 150px">Tùy chỉnh</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td style="vertical-align: middle; padding: 10px;">
+					@Html.DisplayFor(modelItem => item.Id)
+				</td>
+				<td style="vertical-align: middle; padding: 10px;">
+					@Html.DisplayFor(modelItem => item.Title)
+					<span style="color: black; font-size: 13px; font-weight: bold">[@item.AppArticleCate.Name]</span>
+				</td>
+				<td class="text-center">
+					<img src="@item.Images" class="img-thumbnail" width="100px" height="100px" />
+				</td>
+				<td style="vertical-align: middle;" class="text-center">
+					<button class="btn btn-primary">
+						<a asp-action="Edit" class="text-decoration-none text-white" asp-route-id="@item.Id">Sửa</a>
+					</button>
+
+					<button class="btn btn-danger">
+						<a asp-action="Delete" class="text-decoration-none text-white" asp-route-id="@item.Id">Xóa</a>
+					</button>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+<partial name="_Pager" />

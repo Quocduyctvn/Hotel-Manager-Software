@@ -1,0 +1,265 @@
+﻿@using Hotel.Share.Enums
+@model Hotel.Admin.Areas.Admin.DTOs.RentalPackage.UpdateRentalPackageDTOs
+@{
+	ViewData["Title"] = "Thêm gói thuê";
+}
+
+
+<div class="row w-100 mt-2">
+	<div class="col-auto p-0 ps-2 ">
+		<a asp-action="Index" class="text-decoration-none">Quản lý danh sách gói thuê / </a>
+	</div>
+	<div class="col-auto p-0 ms-1">
+		<i>Cập nhật gói cho thuê</i>
+	</div>
+</div>
+<div class="row w-100 fs-4 pt-2">
+	<span class="ps-2" style="font-size: 25px">Cập nhật gói cho thuê</span>
+</div>
+<hr />
+<form asp-action="Update" method="post" enctype="multipart/form-data">
+	<div class="row">
+		<div class="col-sm-7">
+			<div class="form-group">
+				<label asp-for="Name" class="control-label">Tên gói cho thuê:</label>
+				<input asp-for="Name" class="form-control" />
+				<span asp-validation-for="Name" class="text-danger"></span>
+			</div>
+
+			<div class="row">
+				<div class="col-auto  p-0" style="margin: 0 5px;">
+					<label asp-for="Price" class="control-label ms-5" style="margin-top: 10px">Tổng tiền:</label>
+				</div>
+				<div class="col-9 p-0">
+					<div class="form-group">
+						<div class="row">
+							<div class="col-5">
+								<input class="form-control" type="text" asp-for="Price" style="border: none; border-bottom: 1px solid #ced4da; border-radius: 0;" />
+							</div>
+							<div class="col-5" style="padding-top: 10px">
+								<select asp-for="IdTimeOfPrice" class="form-control px-2 text-center border border-secondary form-select">
+									<option value="-1">-----Chọn loại thời gian-----</option>
+									@foreach (var item in ViewBag.Times)
+									{
+										if(Model.IdTimeOfPrice == item.Id)
+										{
+											<option selected value="@item.Id">@item.Name</option>
+										}
+										else
+										{
+											<option value="@item.Id">@item.Name</option>
+										}
+									}
+								</select>
+							</div>
+						</div>
+						<span asp-validation-for="Price" class="text-danger"></span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-auto  p-0" style="margin: 0 5px;">
+						<label asp-for="TrialTime" class="control-label ms-5" style="margin-top: 10px">Tổng Thời gian(dành cho bản dùng thử):</label>
+					</div>
+					<div class="col-6 p-0">
+						<div class="form-group">
+							<div class="row">
+								<div class="col-4">
+									<input class="form-control" type="text" asp-for="TrialTime" style="border: none; border-bottom: 1px solid #ced4da; border-radius: 0;" />
+								</div>
+								<div class="col-7" style="padding-top: 10px">
+									<select asp-for="IdTimeOfTrial" class="form-control px-2 text-center border border-secondary form-select">
+										<option value="-1">---Chọn loại thời gian---</option>
+										@foreach (var item in ViewBag.Times)
+										{
+											if(Model.IdTimeOfTrial == item.Id)
+											{
+												<option value="@item.Id" selected>@item.Name</option>
+											}else{
+
+												<option value="@item.Id">@item.Name</option>
+											}
+										}
+									</select>
+								</div>
+							</div>
+							<span asp-validation-for="TrialTime" class="text-danger"></span>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-auto p-0" style="margin-left: 5px; padding-top: 10px;">
+						<label asp-for="AccountLimit" class="control-label ms-5" style="margin-top: 10px">Giới hạn số tài khoản người dùng:</label>
+					</div>
+					<div class="col-6 p-0">
+						<div class="form-group">
+							<div class="row">
+								<div class="col-8">
+									<input class="form-control" type="text" asp-for="AccountLimit" style="border: none; border-bottom: 1px solid #ced4da; border-radius: 0;" />
+								</div>
+								<div class="col-auto" style=" padding-top: 15px;">
+									- Account
+								</div>
+							</div>
+							<span asp-validation-for="AccountLimit" class="text-danger"></span>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-auto p-0" style="margin-left: 5px; padding-top: 10px;">
+						<label asp-for="RoomLimit" class="control-label ms-5" style="margin-top: 10px">Giới hạn số phòng có thể đăng ký:</label>
+					</div>
+					<div class="col-6 p-0">
+						<div class="form-group">
+							<div class="row">
+								<div class="col-8">
+									<input class="form-control" type="text" asp-for="RoomLimit" style="border: none; border-bottom: 1px solid #ced4da; border-radius: 0;" />
+								</div>
+								<div class="col-auto" style=" padding-top: 15px;">
+									- Phòng
+								</div>
+							</div>
+							<span asp-validation-for="RoomLimit" class="text-danger"></span>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-auto p-0" style="margin-left: 5px; padding-top: 10px;">
+						<label asp-for="UsageTraining" class="control-label ms-5" style="margin-top: 10px">Hình thức đào tạo sử dụng phần mềm:</label>
+					</div>
+					<div class="col-5 p-0">
+						<div class="form-group">
+							<div class="row">
+								<div class="col-12">
+									<input class="form-control" type="text" asp-for="UsageTraining" style="border: none; border-bottom: 1px solid #ced4da; border-radius: 0;" />
+								</div>
+							</div>
+							<span asp-validation-for="UsageTraining" class="text-danger"></span>
+						</div>
+					</div>
+				</div>
+				<div class="row w-100">
+					<div class="col-auto  p-0" style="margin-left: 5px; padding-top: 10px;">
+						<label asp-for="VisualReport" class="control-label ms-5" style="margin-top: 10px">Báo cáo trực quan bằng biểu đồ:</label>
+					</div>
+					<div class="col p-0">
+						<div class="form-group">
+							<div class="row">
+								<div class="col-8 mt-2">
+									<input style="transform: scale(1.2); margin-left: 15px" type="checkbox" asp-for="VisualReport" />
+								</div>
+							</div>
+							<span asp-validation-for="VisualReport" class="text-danger"></span>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="row">
+					<div class="col-6">
+						<div class="form-group">
+							<label asp-for="IdRentalPackageCate" class="control-label">Lọai hình cho thuê:</label>
+							<select asp-for="IdRentalPackageCate" class="form-control form-select px-2 ps-0 text-center border border-secondary">
+								<option value="-1">---------Chọn loại hình cho thuê---------</option>
+								@foreach (var item in ViewBag.RentalPackageCate)
+								{
+									if(Model.IdRentalPackageCate == item.Id)
+									{
+										<option selected value="@item.Id">@item.Name</option>
+									}
+									else
+									{
+										<option value="@item.Id">@item.Name</option>
+									}
+								}
+							</select>
+							<span asp-validation-for="IdRentalPackageCate" class="text-danger"></span>
+						</div>
+					</div>
+
+					<div class="col-6">
+						<div class="form-group">
+							<label asp-for="Status" class="control-label">Trạng thái:</label>
+							<select asp-for="Status" class="form-control form-select px-2 ps-0 text-center border border-secondary">
+								<option value="-1">---------Chọn trạng thái---------</option>
+								@foreach (var status in ViewBag.Status)
+								{
+									if ((int)Model.Status == status.Id)
+													{
+										<option selected value="@status.Id">@status.Name</option>
+									}
+									else
+									{
+										<option value="@status.Id">@status.Name</option>
+									}
+								}
+							</select>
+							<span asp-validation-for="Status" class="text-danger"></span>
+						</div>
+					</div>
+				</div>
+
+
+
+				<div class="row" style="margin-top: 35px">
+					<div class="form-group">
+						<button type="submit" class="btn btn-success js-btn-import">
+							<i class="fa fa-file-excel"></i> &nbsp;  Cập nhật
+						</button>
+					</div>
+					<div class="form-group">
+						<partial name="_BackToList" />
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+
+		<div class="col-sm-5" style="padding-left: 40px;">
+
+			<div class="form-group">
+				<div class="row  px-2 fw-bold mb-1 ps-3 text-bold">Nội dung mô tả chi tiết</div>
+				<textarea asp-for="Desc" class="form-control border border-secondary" rows="7"></textarea>
+			</div>
+			<span asp-validation-for="Desc" class="text-danger"></span>
+
+			@* Phụ thu  *@
+			<div class="row">
+				<div class="col-12 p-0 mt-3">
+					<div class="row">
+						<div class="col">
+							<div class="form-group">
+								<div class="btn rounded-0 form-control text-start" style="background-color: #D2D2D2"><span>Quy định về định dạng nhập tiền</span></div>
+							</div>
+						</div>
+					</div>
+					<div class="row ps-2">
+						<div class="col-12 ps-5">
+							<ul class="mb-0">
+								<li>vd: 2tr500 ~ Nhập 2500000</li>
+							</ul>
+						</div>
+					</div>
+					<div class="row mt-3">
+						<div class="col">
+							<div class="form-group">
+								<div class="btn rounded-0 form-control text-start" style="background-color: #D2D2D2"><span>Quy định về giới hạn "Tài khoản" && "Phòng" </span></div>
+							</div>
+						</div>
+					</div>
+					<div class="row ps-2">
+						<div class="col-12 ps-5">
+							<ul class="mb-0">
+								<li>Nhập tối thiểu là 1 </li>
+								<li>Nhập "0" tương đương "không giới hạn"</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</form>

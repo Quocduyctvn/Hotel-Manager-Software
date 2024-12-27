@@ -1,0 +1,42 @@
+﻿@model Hotel.Admin.DTOs.LoginDTOs
+
+@{
+	ViewData["Title"] = "Đăng nhập";
+}
+<div class="login-box" style=" margin: auto; margin-top:150px;">
+	<!-- /.login-logo -->
+	<div class="card" style="width: 450px; height: 300px">
+		<div class="card-body login-card-body">
+			<div class="login-logo">
+				<b>ĐĂNG NHẬP</b>
+			</div>
+
+			<form method="post" asp-action="Login" asp-controller="Account">
+				<div class="input-group my-2 mb-3">
+					<input asp-for="Phone" type="text" autofocus class="form-control" required placeholder="Số điện thoại">
+					<div class="input-group-append">
+						<div class="input-group-text">
+							<span class="fas fa-user"></span>
+						</div>
+					</div>
+				</div>
+				<span asp-validation-for="Phone" class="text-danger mb-3"></span>
+				<div class="input-group my-2">
+					<input asp-for="Password" type="password" class="form-control" required placeholder="Mật khẩu">
+					<div class="input-group-append">
+						<div class="input-group-text">
+							<span class="fas fa-lock"></span>
+						</div>
+					</div>
+				</div>
+				<span asp-validation-for="Password" class="text-danger"></span>
+				<div class="row mt-3">
+					<div class="col">
+						<button type="submit" class="btn btn-primary btn-block">Đăng nhập</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		<!-- /.login-card-body -->
+	</div>
+</div>

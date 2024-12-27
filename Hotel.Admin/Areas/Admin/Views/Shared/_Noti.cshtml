@@ -1,0 +1,29 @@
+﻿@{
+	var typeOfMesg = "";
+	var mesg = "";
+}
+@if (TempData["Err"] != null)
+{
+	typeOfMesg = "danger";
+	mesg = TempData["Err"]!.ToString();
+}
+else if (TempData["Success"] != null)
+{
+	typeOfMesg = "success";
+	mesg = TempData["Success"]!.ToString();
+}
+else if (TempData["Wrn"] != null)
+{
+	typeOfMesg = "warning";
+	mesg = TempData["Wrn"]!.ToString();
+}
+
+@if (!string.IsNullOrEmpty(typeOfMesg))
+{
+	<div class="alert alert-@typeOfMesg alert-dismissible js-alert fade show" role="alert">
+		@mesg
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+}
